@@ -1,4 +1,4 @@
 
-const lib = require('../lib/js/src');
+const lib = require('../lib/js/src/reason');
 
 console.log(lib);

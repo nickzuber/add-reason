@@ -1,16 +1,13 @@
-# Generic Reason Template
+# add-reason
 
-> A simple and quick scaffold for a project with Reason and BuckleScript.
+> Simple and easy to use CLI tool for adding ReasonML to your JavaScript projects.
 
-This really just sets up the BuckleScript interop so you write OCaml and Reason and produce JavaScript. Good for generic projects or libraries.
-
-# Build
-```
-make build
-```
-
-# Test
+## How To Use
 
 ```
-make test
+$ add-reason [alias] [path/to/reason/files]
 ```
+
+## Example
+
+> coming soon™
