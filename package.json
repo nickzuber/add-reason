@@ -1,16 +1,37 @@
 {
-  "name": "reason-template",
-  "version": "0.1.0",
-  "scripts": {
-    "build": "bsb -make-world",
-    "start": "bsb -make-world -w",
-    "clean": "bsb -clean-world"
+  "name": "add-reason",
+  "version": "1.0.0",
+  "description": "Simple and easy to use CLI tool for adding ReasonML to your JavaScript projects.",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
   },
-  "keywords": [
-    "BuckleScript"
-  ],
-  "license": "MIT",
+  "dependencies": {},
   "devDependencies": {
     "bs-platform": "2.1.0"
-  }
+  },
+  "scripts": {
+    "test": "make test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nickzuber/add-reason.git"
+  },
+  "keywords": [
+    "reasonml",
+    "reason",
+    "ocaml",
+    "add",
+    "interop",
+    "cli",
+    "tool",
+    "bucklescript"
+  ],
+  "author": "Nick Zuber <zuber.nicholas@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nickzuber/add-reason/issues"
+  },
+  "homepage": "https://github.com/nickzuber/add-reason#readme"
 }
