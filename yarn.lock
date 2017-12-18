@@ -5,7 +5,3 @@
 bs-platform@2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/bs-platform/-/bs-platform-2.1.0.tgz#63560ff8f7142c9c0631559df1c35590b9f6d8b2"
-
-levenshtein-lite@^1.0.9:
-  version "1.0.9"
-  resolved "https://registry.yarnpkg.com/levenshtein-lite/-/levenshtein-lite-1.0.9.tgz#fb9f6fe7bacc95a0f20da2d2281bfb04c82dda37"
