@@ -1,5 +1,5 @@
 
-// const lib = require('../lib/js/src/reason');
+// const lib = require('../lib/js/src/core');
 const lib = require('core');
 
-console.log(lib);
+console.log(lib.Shell[1]());
