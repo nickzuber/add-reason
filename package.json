@@ -7,7 +7,9 @@
     "lib": "lib",
     "test": "test"
   },
-  "dependencies": {},
+  "dependencies": {
+    "levenshtein-lite": "^1.0.9"
+  },
   "devDependencies": {
     "bs-platform": "2.1.0"
   },
