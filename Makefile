@@ -10,10 +10,6 @@ build:
 	$(call print_msg, Building... )
 	bsb -make-world
 
-watch:
-	$(call print_msg, Building w/ Watch... )
-	bsb -make-world-w
-
 test:
 	$(call print_msg, Running tests... )
 	node ./test/
@@ -22,4 +18,4 @@ clean:
 	$(call print_msg, Cleaning... )
 	bsb -clean-world
 
-.PHONY: build test clean
+.PHONY: all build test clean
