@@ -2,28 +2,31 @@
 
 'use strict';
 
-const program = require('commander');
+const sade = require('sade');
 const initializer = require('initializer');
+const commands = require('./src/commands');
+const handleInit = initializer.handleInit();
 
-const handleInit = initializer.Shell[3]();
+const program = sade('add-reason');
 
-program
-  .version('1.0.0')
-  .usage('[command] [options]')
-  .command('init <alias> <directory>')
-  .description('Set up Reason directory, config files, and symlink.')
-  .action((alias, directory) => {
-    const res = handleInit(alias, directory);
-    console.log(res);
-  });
+program.version('1.0.0')
+  .option('--no-emojis', 'disable the emojis in the output')
 
-program
-  .command('version')
-  .description('Get the current version.')
-  .action(() => console.log(`🎺  version: ${program.version()}`));
+program.command('init <package-name> <directory>')
+  .describe('set up Reason directory, config files, and symlink')
+  .action((name, directory) => commands.init(name, directory));
 
-// Add a newline after the help command to make it look nicer
-program.on('--help', () => console.log(''));
+ program.command('link <package-name> <directory>')
+  .describe('create a symlink with the given package name')
+  .action((name, directory) => {});
+
+ program.command('rename <new-alias>')
+  .describe('change the current Reason package name')
+  .action((alias) => {});
+
+program.command('unlink <package-name>')
+  .describe('removes the given symlink')
+  .action((name) => {});
 
 program.parse(process.argv);
  

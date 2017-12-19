@@ -11,7 +11,7 @@
     "test": "test"
   },
   "dependencies": {
-    "commander": "^2.12.2"
+    "sade": "^1.0.0"
   },
   "devDependencies": {
     "bs-platform": "2.1.0"
