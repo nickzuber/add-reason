@@ -2,7 +2,7 @@
   "name": "reason-template",
   "version": "0.1.0",
   "sources": [
-    "src/core"
+    "src/initializer"
   ],
   "bs-dependencies" : [],
   "refmt": 3,

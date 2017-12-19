@@ -1,6 +1,4 @@
 
-let coreAttribute = "Core attribute with " ++ MyModule.someAttribute;
-
 module Shell = {
   type t = (string, int);
 
@@ -13,6 +11,8 @@ module Shell = {
   let parse = (argv) => {
      let _ = List.map((x) => print_endline(x), argv);
   };
+
+  let handleInit = () => Init.handle;
 };
 
 let add1 = (n) => n + 1;

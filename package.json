@@ -3,11 +3,16 @@
   "version": "1.0.0",
   "description": "Simple and easy to use CLI tool for adding ReasonML to your JavaScript projects.",
   "main": "index.js",
+  "bin": {
+    "add-reason": "index.js"
+  },
   "directories": {
     "lib": "lib",
     "test": "test"
   },
-  "dependencies": {},
+  "dependencies": {
+    "commander": "^2.12.2"
+  },
   "devDependencies": {
     "bs-platform": "2.1.0"
   },
