@@ -2,23 +2,26 @@
 open GenericBindings;
 
 [@bs.val] [@bs.module "fs"]
-external symlink : (string, string, (option(string) => unit)) => unit = "symlink";
+external createSymlink : (string, string) => unit = "symlinkSync";
 
-let responseMessage = (err) => {
-  let msg = switch err {
-  | Some(e) => getEmoji("no_entry_sign") ++ "  " ++ printRed("failed link, " ++ e)
-  | None => getEmoji("paperclip") ++ "  " ++ printGreen("successful link")
+[@bs.val] [@bs.module "fs"]
+external validSymlinkExists : string => bool = "existsSync";
+
+let attemptToLink = (source, dest) => {
+  Js.log("CHECKING: " ++ dest);
+  let exists = validSymlinkExists(dest);
+  Js.log("EXISTS:   " ++ string_of_bool(exists));
+  if (exists) {
+    let msg = getEmoji("paperclip") ++ printRed("failed link") ++ " there's already a symlink here. Do you mean to `unlink`?";
+    Js.log(msg);
+    false;
+  } else {
+    createSymlink(source, dest);
+    /* Debug */ Js.log(printGreen("ln") ++ " -sv " ++ source ++ " " ++ dest);
+    let msg = getEmoji("paperclip") ++ printGreen("successful link");
+    Js.log(msg);
+    true;
   };
-  Js.log(msg);
-};
-
-let createSymlink = (source, dest) => {
-  let source = "/" ++ source;
-  let dest = "/" ++ dest;
-  symlink(source, dest, (err) => {
-    responseMessage(err)
-  });
-  Js.log(printGreen("ln") ++ " -sv " ++ source ++ " " ++ dest)
 };
 
 let cleanPath = (path) => {

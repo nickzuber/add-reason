@@ -6,4 +6,9 @@ external printGreen : string => string = "green";
 external printRed : string => string = "red";
 
 [@bs.val] [@bs.module "node-emoji"]
-external getEmoji : string => string = "get";
+external getEmojiNative : string => string = "get";
+
+/** Patch with padding */
+let getEmoji = (emoji) => {
+  getEmojiNative(emoji) ++ "  ";
+};

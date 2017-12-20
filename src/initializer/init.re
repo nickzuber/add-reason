@@ -12,13 +12,17 @@ let getReasonSource = () => {
   "/lib/js/src/"
 };
 
-let handle = (name, directory, rootDirectory) => {
-  let linkToNodeModules = combinePaths(rootDirectory, "node_modules");
-  let source = combinePaths(rootDirectory, directory);
-  let dest = combinePaths(linkToNodeModules, name);
-  createSymlink(source, dest)
-};
-
 let complete = () => {
   getEmoji("sparkles") ++ printGreen("done") ++ " in 0.52s";
+};
+
+let handle = (name, directory, rootDirectory) => {
+  let linkToNodeModules = combinePaths(rootDirectory, "node_modules");
+  let source = "/" ++ combinePaths(rootDirectory, directory);
+  let dest = "/" ++ combinePaths(linkToNodeModules, name);
+  let success = attemptToLink(source, dest);
+  switch success {
+    | true => Js.log(complete())
+    | false => Js.log("link failure")
+  };
 };
