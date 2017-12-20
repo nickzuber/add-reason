@@ -1,26 +1,24 @@
 
 /* Symlink:
-  ln -sv /Users/nick/projects/add-reasoninitializer /Users/nick/projects/add-reason/node_modules//lib/js/src/initializer
-  ln -sv "$(pwd)/lib/js/src/<ALIAS>" "$(pwd)/node_modules/<ALIAS>"
-                directory                       target
+  ln -sv /Users/nick/projects/add-reason/lib/js/src/initializer /Users/nick/projects/add-reason/node_modules/initializer 
+  ln -sv "$(pwd)/lib/js/src/initializer" "$(pwd)/node_modules/<ALIAS>"
+                directory   ^^^^^^^^^^^         target
+                            do we need this
 */
+open Utils;
+open GenericBindings;
 
-/**
- * Handle the init command by delegating what to do with the 
- * alias and the directory arguments.
- */
-let handle = (alias, directory) => {
-  Js.log("handle " ++ alias ++ " -> " ++ directory);
-  Utils.create_symlink(alias, directory);
+let getReasonSource = () => {
+  "/lib/js/src/"
 };
 
-/**
- * Reconstruct a directory and a file to correctly append
- * the file to the end of the directory, forming a valid path.
- */
-let createPath = (directory, file) => {
-  /* split directory by slash */
-  /* add file to end of directory list */
-  /* rejoin new directory list with a slash */
-  /*   ^-- backslash if windows? */
+let handle = (name, directory, rootDirectory) => {
+  let linkToNodeModules = combinePaths(rootDirectory, "node_modules");
+  let source = combinePaths(rootDirectory, directory);
+  let dest = combinePaths(linkToNodeModules, name);
+  createSymlink(source, dest)
+};
+
+let complete = () => {
+  getEmoji("sparkles") ++ printGreen("done") ++ " in 0.52s";
 };

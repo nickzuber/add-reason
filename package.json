@@ -11,7 +11,9 @@
     "test": "test"
   },
   "dependencies": {
-    "sade": "^1.0.0"
+    "chalk": "^2.3.0",
+    "commander": "2.9.0",
+    "node-emoji": "^1.8.1"
   },
   "devDependencies": {
     "bs-platform": "2.1.0"
