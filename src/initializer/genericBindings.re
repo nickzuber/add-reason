@@ -12,6 +12,9 @@ external white : string => string = "white";
 external gray : string => string = "gray";
 
 [@bs.val] [@bs.module "chalk"]
+external yellow : string => string = "yellow";
+
+[@bs.val] [@bs.module "chalk"]
 external bold : string => string = "bold";
 
 [@bs.val] [@bs.module "node-emoji"]

@@ -37,7 +37,7 @@ module InitCommand {
     /* let success = attemptToCreateConfig */
     let (index, total) = position;
     let position = Printf.sprintf("[%d/%d]", index, total) |> gray;
-    Printf.sprintf("%s %sCreating config... %s", position, getEmoji("page_with_curl"), green("success"))
+    Printf.sprintf("%s %sCreating config... %s", position, getEmoji("page_with_curl"), yellow("warning"))
       |> Js.log;
     true
   };
@@ -45,7 +45,7 @@ module InitCommand {
   let performEndpointSetup = (position, name, directory, rootDirectory) : bool => {
     let (index, total) = position;
     let position = Printf.sprintf("[%d/%d]", index, total) |> gray;
-    Printf.sprintf("%s %sSetting up endpoint... %s", position, getEmoji("open_file_folder"), green("success"))
+    Printf.sprintf("%s %sSetting up endpoint... %s", position, getEmoji("open_file_folder"), yellow("warning"))
       |> Js.log;
     true
     /*

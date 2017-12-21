@@ -76,9 +76,9 @@ module Fs_Polyfill {
         false
       | (true, false, _) =>
         createSymlink(source, dest);
+        /* This is a correct postinstall script string, call with `$ node -e %s` */
         let postInstallCommand = Printf.sprintf("var s='%s',d='%s',fs=require('fs');fs.exists(d,function(e){e||fs.symlinkSync(s,d,'dir')});",
           source, dest);
-        Js.log(postInstallCommand);
         Printf.sprintf("%s%s",prefix, green("success")) 
           |> Js.log;
         true
