@@ -6,4 +6,4 @@ node_js:
   - '7'
   - 'lts/*'
   - 'iojs'
-script: make test
+script: make travis-test

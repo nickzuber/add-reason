@@ -13,4 +13,3 @@ const directory = 'src/myCode';
 console.log(`$> ${chalk.green('add-reason')} init ${name} ${directory}`)
 commands.init(name, directory, rootDirectory, version);
 // require('./mockRoot/index');
-
