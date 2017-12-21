@@ -14,6 +14,11 @@ test:
 	$(call print_msg, Running tests... )
 	node ./__tests__/
 
+travis-test:
+	$(call print_msg, Running tests in Travis Environment... )
+	ln -sv ../lib/js/src/initializer ./node_modules/initializer
+	node ./__tests__/
+
 clean:
 	$(call print_msg, Cleaning... )
 	bsb -clean-world

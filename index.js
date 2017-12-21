@@ -9,7 +9,9 @@ const initializer = require('initializer');
 const OutputPatcher = require('./src/patches').OutputPatcher;
 const rootDirectory = process.cwd();
 
-program.version('0.0.1')
+const VERSION = require('./src/config').VERSION;
+
+program.version(VERSION)
   .usage('add-reason [command] [options]')
   .option('--no-emojis', 'disable the emojis in the output');
 
@@ -39,4 +41,3 @@ if (!process.argv.slice(2).length) {
 }
 
 program.parse(process.argv);
- 
