@@ -5,23 +5,41 @@ open GenericBindings;
 external createSymlink : (string, string) => unit = "symlinkSync";
 
 [@bs.val] [@bs.module "fs"]
-external validSymlinkExists : string => bool = "existsSync";
+external throwIfFileDNE : string => bool = "lstatSync";
+
+let safeFileExists = (file) => {
+  try {
+    let stats = throwIfFileDNE(file);
+    true;
+  } {
+    | _ => false
+  }
+};
 
 let attemptToLink = (source, dest) => {
-  Js.log("CHECKING: " ++ dest);
-  let exists = validSymlinkExists(dest);
-  Js.log("EXISTS:   " ++ string_of_bool(exists));
-  if (exists) {
-    let msg = getEmoji("paperclip") ++ printRed("failed link") ++ " there's already a symlink here. Do you mean to `unlink`?";
-    Js.log(msg);
-    false;
-  } else {
-    createSymlink(source, dest);
-    /* Debug */ Js.log(printGreen("ln") ++ " -sv " ++ source ++ " " ++ dest);
-    let msg = getEmoji("paperclip") ++ printGreen("successful link");
-    Js.log(msg);
-    true;
+  let existsSource = safeFileExists(source);  /* Should exist */
+  let existsDest = safeFileExists(dest);  /* Should not exist */
+  let success = switch (existsSource, existsDest) {
+    | (true, false) => 
+      /* Debug  Js.log(printGreen("ln") ++ " -sv " ++ source ++ " " ++ dest); */
+      createSymlink(source, dest);
+      Js.log(getEmoji("paperclip") ++ printGreen("successful link"));
+      true;
+    | (true, true) => 
+      Js.log(getEmoji("paperclip") ++ printRed("failed link") ++ " there's already a file here. Did you mean to `unlink`?");
+      Js.log("\t" ++ dest);
+      false;
+    | (false, true) =>
+      Js.log(getEmoji("paperclip") ++ printRed("failed link") ++ " couldn't find your source directory. Do you have a typo?");
+      Js.log("\t" ++ source);
+      false;
+    | (false, false) => 
+      Js.log(getEmoji("paperclip") ++ printRed("failed link") ++ " couldn't find either directory. Do you have typos?");
+      Js.log("\t" ++ source);
+      Js.log("\t" ++ dest);
+      false;
   };
+  success;
 };
 
 let cleanPath = (path) => {
@@ -33,8 +51,15 @@ let cleanPath = (path) => {
   String.sub(path, starting, ending);
 };
 
-let combinePaths = (beginning, ending) => {
-  let validBeginning = cleanPath(beginning);
-  let validEndling = cleanPath(ending);
-  validBeginning ++ "/" ++ validEndling;
+let combinePaths = (paths) => {
+  let rec combine = (paths, result) => {
+    switch paths {
+      | [path, ...rest] => 
+        let result = result ++ "/" ++ cleanPath(path);
+        combine(rest, result);
+      | [path] => result ++ "/" ++ cleanPath(path);
+      | _ => result
+    };
+  };
+  combine(paths, "");
 };

@@ -9,6 +9,4 @@ external printRed : string => string = "red";
 external getEmojiNative : string => string = "get";
 
 /** Patch with padding */
-let getEmoji = (emoji) => {
-  getEmojiNative(emoji) ++ "  ";
-};
+let getEmoji = (emoji) => getEmojiNative(emoji) ++ "  ";
