@@ -7,17 +7,16 @@ const program = require('commander');
 const commands = require('./src/commands');
 const initializer = require('initializer');
 const OutputPatcher = require('./src/patches').OutputPatcher;
-const rootDirectory = path.join(__dirname);
+const rootDirectory = process.cwd();
 
-program.version('1.0.0')
+program.version('0.0.1')
   .usage('add-reason [command] [options]')
   .option('--no-emojis', 'disable the emojis in the output');
 
 program.command('init <package-name> <directory>')
   .description('set up Reason directory, config files, and symlink')
   .action((name, directory) => {
-    console.log(rootDirectory);
-    commands.init(name, directory, "root")
+    commands.init(name, directory, rootDirectory, program.version());
   });
 
  program.command('link <package-name> <directory>')

@@ -1,2 +1,2 @@
 
-let handleInit = () => Init.handle;
+let handleInit = () => Init.InitCommand.main;

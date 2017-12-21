@@ -1,12 +1,22 @@
 
 [@bs.val] [@bs.module "chalk"]
-external printGreen : string => string = "green";
+external green : string => string = "green";
 
 [@bs.val] [@bs.module "chalk"]
-external printRed : string => string = "red";
+external red : string => string = "red";
+
+[@bs.val] [@bs.module "chalk"]
+external white : string => string = "white";
+
+[@bs.val] [@bs.module "chalk"]
+external gray : string => string = "gray";
+
+[@bs.val] [@bs.module "chalk"]
+external bold : string => string = "bold";
 
 [@bs.val] [@bs.module "node-emoji"]
 external getEmojiNative : string => string = "get";
 
-/** Patch with padding */
 let getEmoji = (emoji) => getEmojiNative(emoji) ++ "  ";
+let altCodeDirectionalNonTerminal = [%bs.raw{| "├─ " |}];
+let altCodeDirectional = [%bs.raw{| "└─ " |}];

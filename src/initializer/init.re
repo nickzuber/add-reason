@@ -8,33 +8,68 @@
 open Utils;
 open GenericBindings;
 
-let getReasonSource = () => {
-  "/lib/js/src/"
-};
+module InitCommand {
+  let defaultCompiledDest = "/lib/js";
 
-let complete = (success, name) => {
-  let msg = switch success {
-    | true => getEmoji("sparkles") ++ printGreen("done") ++ " import your compiled code as `" ++ name ++ "`";
-    | false => getEmoji("no_entry_sign") ++ printRed("failure") ++ " see which step went wrong";
+  let getCompleteMessage = (finishWithFailure, name) : string => {
+    switch finishWithFailure {
+      | true =>
+        Printf.sprintf("%s%s See which step went wrong", 
+          getEmoji("no_entry_sign"), red("fail"))
+      | false =>
+        let example = Printf.sprintf("import your compiled code with `const pkg = require('%s');`", name) |> bold;
+        Printf.sprintf("%s%s\n%s %s", 
+          getEmoji("sparkles"), green("done"), altCodeDirectional, example)
+    };
   };
-  Js.log(msg);
-};
 
-let performConfigCreation = (name, directory, rootDirectory) => {
-  /* let success = attemptToCreateConfig */
-  Js.log(getEmoji("page_with_curl") ++ printGreen("created config") ++ " ");
-};
+  let performLinking = (position, name, directory, rootDirectory) : bool => {
+    open Path;
+    let linkToNodeModules = combinePaths([rootDirectory, "node_modules"]);
+    let source = combinePaths([rootDirectory, defaultCompiledDest, directory]);
+    let dest = combinePaths([linkToNodeModules, name]);
+    let success = Fs_Polyfill.attemptToLink(position, source, dest);
+    success
+  };
 
-let performLinking = (name, directory, rootDirectory) => {
-  let linkToNodeModules = combinePaths([rootDirectory, "node_modules"]);
-  let source = combinePaths([rootDirectory, "lib/js", directory]);
-  let dest = combinePaths([linkToNodeModules, name]);
-  let success = attemptToLink(source, dest);
-  success;
-};
+  let performConfigCreation = (position, name, directory, rootDirectory) : bool => {
+    /* let success = attemptToCreateConfig */
+    let (index, total) = position;
+    let position = Printf.sprintf("[%d/%d]", index, total) |> gray;
+    Printf.sprintf("%s %sCreating config... %s", position, getEmoji("page_with_curl"), green("success"))
+      |> Js.log;
+    true
+  };
 
-let handle = (name, directory, rootDirectory) => {
-  let configSuccess = performConfigCreation(name, directory, rootDirectory);
-  let linkingSuccess = performLinking(name, directory, rootDirectory);
-  complete(linkingSuccess, name);
+  let execute = (steps, name, directory, rootDirectory) : bool => {
+    let total = List.length(steps);
+    let finishWithFailure = ref(false);
+    let rec loop = (steps, index) : unit =>
+      switch steps {
+        | [cur] => 
+          let success = cur((index, total), name, directory, rootDirectory);
+          if (!success) { finishWithFailure := true }
+        | [cur, ...rest] =>
+          let success = cur((index, total), name, directory, rootDirectory);
+          if (!success) { finishWithFailure := true };
+          loop(rest, index + 1)
+        | _ => ()
+      };
+    loop(steps, 1);
+    finishWithFailure^
+  };
+
+  let main = (name, directory, rootDirectory, version) : unit => {
+    Printf.sprintf("add-reason init v%s", version)
+      |> white
+      |> bold
+      |> Js.log;
+    let stepsAsFunctions = [
+      performConfigCreation,
+      performLinking
+    ];
+    let finishWithFailure = execute(stepsAsFunctions, name, directory, rootDirectory);
+    getCompleteMessage(finishWithFailure, name)
+      |> Js.log;
+  };
 };
