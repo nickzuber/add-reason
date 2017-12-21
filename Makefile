@@ -16,7 +16,7 @@ test:
 
 travis-test:
 	$(call print_msg, Running tests in Travis Environment... )
-	ln -sv ../lib/js/src/initializer ./node_modules/initializer
+	ln -sv ../lib/js/src/initializer ./node_modules
 	node ./__tests__/
 
 clean:
