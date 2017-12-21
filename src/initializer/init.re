@@ -42,6 +42,23 @@ module InitCommand {
     true
   };
 
+  let performEndpointSetup = (position, name, directory, rootDirectory) : bool => {
+    let (index, total) = position;
+    let position = Printf.sprintf("[%d/%d]", index, total) |> gray;
+    Printf.sprintf("%s %sSetting up endpoint... %s", position, getEmoji("open_file_folder"), green("success"))
+      |> Js.log;
+    true
+    /*
+      check for lib/
+      check for lib/js
+      check for lib/js/<name>
+      (false, _, _) => create all 3 (success)
+      (true, false, _) => create /lib/js and /libjs/<name> (warning, lib exists and we gonna use it)
+      (true, true, false) => create /lib/js/<name> (success)
+      (true, true, true) => do nothing (success)
+    */
+  };
+
   let execute = (steps, name, directory, rootDirectory) : bool => {
     let total = List.length(steps);
     let finishWithFailure = ref(false);
@@ -67,6 +84,7 @@ module InitCommand {
       |> Js.log;
     let stepsAsFunctions = [
       performConfigCreation,
+      performEndpointSetup,
       performLinking
     ];
     let finishWithFailure = execute(stepsAsFunctions, name, directory, rootDirectory);
