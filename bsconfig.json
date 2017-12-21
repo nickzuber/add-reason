@@ -8,6 +8,6 @@
   "refmt": 3,
   "namespace": true,
   "warnings": {
-    "number": "-27"  // Hide unused variable warning
+    "number": "-26-27"  // Hide unused variable warning
   }
 }

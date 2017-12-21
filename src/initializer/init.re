@@ -9,7 +9,8 @@ open Utils;
 open GenericBindings;
 
 module InitCommand {
-  let defaultCompiledDest = "/lib/js";
+  let defaultCompiledPath = "/lib/js";
+  let defaultNodeModulesPath = "node_modules";
 
   let getCompleteMessage = (finishWithFailure, name) : string => {
     switch finishWithFailure {
@@ -26,8 +27,8 @@ module InitCommand {
 
   let performLinking = (position, name, directory, rootDirectory) : bool => {
     open Path;
-    let linkToNodeModules = combinePaths([rootDirectory, "node_modules"]);
-    let source = combinePaths([rootDirectory, defaultCompiledDest, directory]);
+    let linkToNodeModules = combinePaths([rootDirectory, defaultNodeModulesPath]);
+    let source = combinePaths([rootDirectory, defaultCompiledPath, directory]);
     let dest = combinePaths([linkToNodeModules, name]);
     let success = Fs_Polyfill.attemptToLink(position, source, dest);
     success
@@ -59,6 +60,24 @@ module InitCommand {
     */
   };
 
+  let performPostInstall = (position, name, directory, rootDirectory) : bool => {
+    open Path;
+    let (index, total) = position;
+    let position = Printf.sprintf("[%d/%d]", index, total) |> gray;
+    /* 
+      s='../lib/js/<directory>' --> `directory` cleaned and original
+      d='./node_modules/<name>'
+    */
+    let source = combinePaths(["..", defaultCompiledPath, directory], ~useLeadingSlash=false);
+    let dest = combinePaths([".", defaultNodeModulesPath, name], ~useLeadingSlash=false);
+    let postInstallCommand = Printf.sprintf("var s='%s',d='%s',fs=require('fs');fs.exists(d,function(e){e||fs.symlinkSync(s,d,'dir')});",
+      source, dest);
+    Printf.sprintf("%s %sAdding postinstall script... %s", position, getEmoji("zap"), yellow("warning"))
+      |> Js.log;
+    Js.log("--> " ++ postInstallCommand);
+    true
+  };
+
   let execute = (steps, name, directory, rootDirectory) : bool => {
     let total = List.length(steps);
     let finishWithFailure = ref(false);
@@ -85,7 +104,8 @@ module InitCommand {
     let stepsAsFunctions = [
       performConfigCreation,
       performEndpointSetup,
-      performLinking
+      performLinking,
+      performPostInstall
     ];
     let finishWithFailure = execute(stepsAsFunctions, name, directory, rootDirectory);
     getCompleteMessage(finishWithFailure, name)

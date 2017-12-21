@@ -11,7 +11,9 @@ external throwIfFileDNE : string => bool = "lstatSync";
 module Path {
   /**
    * Removes any leading and trailing slashes on the input path string and 
-   * adds a leading slash before the cleaned path is returned.
+   * adds a leading slash before the cleaned path is returned. You can opt-out
+   * of this leading slash if you want to. Doing that could be useful for when 
+   * you want to have a relative path.
    */
   let cleanPath = (path) : string => {
     let size = String.length(path);
@@ -19,24 +21,25 @@ module Path {
     let last = String.sub(path, size - 1, 1);
     let starting = if (first == "/") { 1; } else { 0; };
     let ending = if (last == "/") { size - starting - 1; } else { size - starting; };
-    "/" ++ String.sub(path, starting, ending);
+    String.sub(path, starting, ending)
   };
   
-  let combinePaths = (paths) : string => {
+  let combinePaths = (~useLeadingSlash=true, paths) : string => {
+    let prefix = useLeadingSlash ? "/" : "";
     let rec combine = (paths, result) => {
       switch paths {
         | [path] => result ++ cleanPath(path);
-        | [path, ...rest] => 
-          let result = result ++ cleanPath(path);
+        | [path, ...rest] =>
+          let result = result ++ cleanPath(path) ++ "/";
           combine(rest, result);
         | _ => result
       };
     };
-    combine(paths, "");
+    prefix ++ combine(paths, "");
   };
 
   let removeTopFromPath = (path) : string => {
-    let path = cleanPath(path);
+    let path = "/" ++ cleanPath(path);
     let pos = ref(String.length(path) - 1);
     let finalPath = ref(path);
     while (pos^ >= 0) {
@@ -62,23 +65,24 @@ module Fs_Polyfill {
   let attemptToLink = (position, source, dest) : bool => {
     let (index, total) = position;
     let position = Printf.sprintf("[%d/%d] ", index, total) |> gray;
+    let targetDirectory = dest |> Path.removeTopFromPath;
     
-    let existsSource = safeFileExists(source);  /* Should exist */
-    let existsDest = safeFileExists(dest);  /* Should not exist */
-    let isValidPathDest = safeFileExists(Path.removeTopFromPath(dest));  /* Should be valid */
+    /* Should exist */
+    let existsSource = safeFileExists(source);
+    /* Should not exist */
+    let existsDest = safeFileExists(dest);
+    /* Should exist */
+    let isValidPathDest = targetDirectory |> safeFileExists;
 
     let prefix = position ++ getEmoji("link") ++ "Linking package... ";
     let success = switch (existsSource, existsDest, isValidPathDest) {
       | (_, _, false) =>
-      Printf.sprintf("%s%s Couldn't find your destination directory. Do you have a typo?\n%s%s",
-          prefix, red("failed"), altCodeDirectional, bold(dest)) 
+      Printf.sprintf("%s%s Couldn't find your target's directory. Do you have a typo?\n%s%s",
+          prefix, red("failed"), altCodeDirectional, bold(targetDirectory)) 
           |> Js.log;
         false
       | (true, false, _) =>
         createSymlink(source, dest);
-        /* This is a correct postinstall script string, call with `$ node -e %s` */
-        let postInstallCommand = Printf.sprintf("var s='%s',d='%s',fs=require('fs');fs.exists(d,function(e){e||fs.symlinkSync(s,d,'dir')});",
-          source, dest);
         Printf.sprintf("%s%s",prefix, green("success")) 
           |> Js.log;
         true
