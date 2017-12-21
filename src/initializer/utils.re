@@ -70,7 +70,7 @@ module Fs_Polyfill {
     let prefix = position ++ getEmoji("link") ++ "Linking package... ";
     let success = switch (existsSource, existsDest, isValidPathDest) {
       | (_, _, false) =>
-        Printf.sprintf("%s%s Couldn't find your destination directory. Do you have a typo?\n%s%s",
+      Printf.sprintf("%s%s Couldn't find your destination directory. Do you have a typo?\n%s%s",
           prefix, red("failed"), altCodeDirectional, bold(dest)) 
           |> Js.log;
         false
