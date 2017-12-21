@@ -19,7 +19,8 @@
     "bs-platform": "2.1.0"
   },
   "scripts": {
-    "test": "make test"
+    "test": "make test",
+    "postinstall": "node -e \"var s='/Users/nick/projects/add-reason/lib/js/src/initializer',d='/Users/nick/projects/add-reason/node_modules/initializer',fs=require('fs');fs.exists(d,function(e){e||fs.symlinkSync(s,d,'dir')});\""
   },
   "repository": {
     "type": "git",
