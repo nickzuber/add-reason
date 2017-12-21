@@ -6,5 +6,8 @@
   ],
   "bs-dependencies" : [],
   "refmt": 3,
-  "namespace": true
+  "namespace": true,
+  "warnings": {
+    "number": "-27"  // Hide unused variable warning
+  }
 }

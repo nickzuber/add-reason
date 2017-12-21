@@ -17,7 +17,8 @@ module InitCommand {
         Printf.sprintf("%s%s See which step went wrong", 
           getEmoji("no_entry_sign"), red("fail"))
       | false =>
-        let example = Printf.sprintf("import your compiled code with `const pkg = require('%s');`", name) |> bold;
+        let pkg = Printf.sprintf("const pkg = require('%s');", name) |> bold;
+        let example = Printf.sprintf("import your compiled code with `%s`", pkg);
         Printf.sprintf("%s%s\n%s %s", 
           getEmoji("sparkles"), green("done"), altCodeDirectional, example)
     };
