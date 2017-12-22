@@ -19,7 +19,7 @@
     "bs-platform": "2.1.0"
   },
   "scripts": {
-    "postinstall": "node -e \"var s='../lib/js/src/initializer',d='./node_modules/initializer',fs=require('fs');fs.exists(d,function(e){e||fs.symlinkSync(s,d,'dir')});\"",
+    "postinstall": "node -e \"var s='../lib/js/src/initializer',d='./node_modules/initializer',fs=require('fs');if(fs.existsSync(d)===false){fs.symlinkSync(s,d,'dir')};\"",
     "test": "make test"
   },
   "repository": {

@@ -64,7 +64,7 @@ module InitCommand {
     let position = Printf.sprintf("[%d/%d]", index, total) |> gray;
     let source = combinePaths(["..", defaultCompiledPath, directory], ~useLeadingSlash=false);
     let dest = combinePaths([".", defaultNodeModulesPath, name], ~useLeadingSlash=false);
-    let postInstallCommand = Printf.sprintf("var s='%s',d='%s',fs=require('fs');fs.exists(d,function(e){e||fs.symlinkSync(s,d,'dir')});",
+    let postInstallCommand = Printf.sprintf("var s='%s',d='%s',fs=require('fs');if(fs.existsSync(d)===false){fs.symlinkSync(s,d,'dir')};",
       source, dest);
     Printf.sprintf("%s %sAdding postinstall... %s", position, getEmoji("zap"), green("success"))
       |> Js.log;
