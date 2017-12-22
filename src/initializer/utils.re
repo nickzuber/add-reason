@@ -7,6 +7,9 @@ external createSymlink : (string, string) => unit = "symlinkSync";
 [@bs.val] [@bs.module "fs"]
 external throwIfFileDNE : string => bool = "lstatSync";
 
+[@bs.val] [@bs.module "fs"]
+external createAndWriteToFile : (string, string) => unit = "writeFileSync";
+
 
 module Path {
   /**
@@ -83,7 +86,7 @@ module Fs_Polyfill {
         false
       | (true, false, _) =>
         createSymlink(source, dest);
-        Printf.sprintf("%s%s",prefix, green("success")) 
+        Printf.sprintf("%s%s", prefix, green("success")) 
           |> Js.log;
         true
       | (true, true, _) =>
@@ -103,5 +106,29 @@ module Fs_Polyfill {
         false
     };
     success;
+  };
+
+  let attemptToCreateConfig = (position, filename, contents) => {
+    try {
+      let (index, total) = position;
+      let position = Printf.sprintf("[%d/%d]", index, total) |> gray;
+      let prefix = position ++ getEmoji("pencil2") ++ " Creating config... ";
+
+      /* Should not exist, but if it doesn't we just ignore and warn */
+      let existsConfig = safeFileExists(filename);
+      let _ = switch existsConfig {
+        | false =>
+          createAndWriteToFile(filename, contents);
+          let filename = filename |> bold;
+          Printf.sprintf("%s%s", prefix, green("success"))
+            |> Js.log;
+        | true =>
+          Printf.sprintf("%s%s You already have a bsconfig file. Skipping this step.", prefix, yellow("warning"))
+            |> Js.log;
+      };
+      true
+    } {
+      | _ => false
+    }
   };
 };
