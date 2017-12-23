@@ -4,11 +4,11 @@
 
 const path = require('path');
 const program = require('commander');
-const commands = require('./src/commands');
 const initializer = require('initializer');
 const OutputPatcher = require('./src/patches').OutputPatcher;
 const rootDirectory = process.cwd();
 
+const handleInit = initializer.handleInit();
 const VERSION = require('./src/config').VERSION;
 
 program.version(VERSION)
@@ -17,9 +17,7 @@ program.version(VERSION)
 
 program.command('init <package-name> <directory>')
   .description('set up Reason directory, config files, and symlink')
-  .action((name, directory) => {
-    commands.init(name, directory, rootDirectory, program.version());
-  });
+  .action((name, directory) => handleInit(name, directory, rootDirectory, VERSION));
 
  program.command('link <package-name> <directory>')
   .description('create a symlink with the given package name')

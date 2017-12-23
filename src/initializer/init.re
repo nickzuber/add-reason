@@ -48,13 +48,14 @@ module InitCommand {
     let (index, total) = position;
     let position = Printf.sprintf("[%d/%d]", index, total) |> gray;
     /** @TODO
-     * check for lib/
-     * check for lib/js
-     * check for lib/js/<name>
-     * (false, _, _) => create all 3 (success)
-     * (true, false, _) => create /lib/js and /libjs/<name> (warning, lib exists and we gonna use it)
-     * (true, true, false) => create /lib/js/<name> (success)
-     * (true, true, true) => do nothing (success)
+     * check for lib/           <- a
+     * check for lib/js         <- b
+     * check for lib/js/<name>  <- c
+     * switch (a, b, c) { ...
+     *   | (false, _, _) => create all 3 (success)
+     *   | (true, false, _) => create /lib/js and /libjs/<name> (warning, lib exists and we gonna use it)
+     *   | (true, true, false) => create /lib/js/<name> (success)
+     *   | (true, true, true) => do nothing (success)
      */
     Printf.sprintf("%s %sValidating target... %s Unfinished", position, getEmoji("open_file_folder"), yellow("warning")) |> Js.log;
     true
@@ -70,12 +71,13 @@ module InitCommand {
     switch success {
       | true => Printf.sprintf("%s %sAdding postinstall... %s", position, getEmoji("zap"), green("success")) |> Js.log
       | false =>
-        let prettyPostInstallCommand = Printf.sprintf("\"postinstall\": \"%s\"", postInstallCommand) |> bold;
+        let postInstallCommand' = Printf.sprintf("node -e \\\"var s='%s',d='%s',fs=require('fs');if(fs.existsSync(d)===false){fs.symlinkSync(s,d,'dir')};\\\"", source, dest);
+        let prettyPostInstallCommand = Printf.sprintf("\"postinstall\": \"%s\"", postInstallCommand') |> bold;
         Printf.sprintf("%s %sAdding postinstall... %s Unable to automatically add postinstall script\n%sAdd this to your `package.json` scripts:\n   %s",
-          position, getEmoji("zap"), red("failed"), altCodeDirectional, prettyPostInstallCommand)
+          position, getEmoji("zap"), yellow("warning"), altCodeDirectional, prettyPostInstallCommand)
           |> Js.log
     };
-    success
+    true
   };
 
   let execute = (steps, name, directory, rootDirectory) : bool => {

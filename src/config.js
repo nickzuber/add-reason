@@ -1,2 +1,5 @@
+'use strict';
 
-module.exports.VERSION = "1.0.0";
+const pkg = require('../package.json');
+
+module.exports.VERSION = pkg.version;

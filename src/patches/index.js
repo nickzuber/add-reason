@@ -19,17 +19,18 @@ const OutputPatcher = (commander) => {
 };
 
 /**
+ * @note Everything needs to be sync because of the ordering of the output.
  * @param file The absolute path to the `package.json` file.
  * @param command The command to add to the `scripts` key.
- * @return Returns the success of the process.
+ * @return The success of the operations.
  */
-const editPackageScripts = (file, command) => {
+const editPackageScripts = (file, command, callback) => {
   const config = {
     type: 'space',
     size: 2
   };
-  jsonfile.readFile(file, (err, contents) => {
-    if (err) return false;
+  try {
+    const contents = jsonfile.readFileSync(file);
     // No existing scripts
     if (!contents.scripts) {
       contents.scripts = {
@@ -46,8 +47,11 @@ const editPackageScripts = (file, command) => {
       }
       contents.scripts.postinstall = command;
     }
-    fs.writeFile(file, jsonFormat(contents, config), (err) => !!err);
-  });
+    fs.writeFileSync(file, jsonFormat(contents, config));
+    return true;
+  } catch (e) {
+    return false;
+  }
 };
 
 module.exports.OutputPatcher = OutputPatcher;
