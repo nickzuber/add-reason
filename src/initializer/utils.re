@@ -111,8 +111,8 @@ module Fs_Polyfill {
   let attemptToCreateConfig = (position, filename, contents) => {
     try {
       let (index, total) = position;
-      let position = Printf.sprintf("[%d/%d]", index, total) |> gray;
-      let prefix = position ++ getEmoji("pencil2") ++ " Creating config... ";
+      let position = Printf.sprintf("[%d/%d] ", index, total) |> gray;
+      let prefix = position ++ getEmoji("pencil2") ++ "Creating config... ";
 
       /* Should not exist, but if it doesn't we just ignore and warn */
       let existsConfig = safeFileExists(filename);
