@@ -17,7 +17,7 @@ program.version(VERSION)
 
 program.command('init <package-name> <directory>')
   .description('set up Reason directory, config files, and symlink')
-  .action((name, directory) => handleInit(name, directory, rootDirectory, VERSION));
+  .action((name, directory) => handleInit(name, directory, rootDirectory, VERSION, program.emojis));
 
  program.command('link <package-name> <directory>')
   .description('create a symlink with the given package name')

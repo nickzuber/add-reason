@@ -26,13 +26,13 @@ module InitCommand {
     switch finishWithFailure {
       | true =>
         Printf.sprintf("%s%s See which step went wrong", 
-          getEmoji("no_entry_sign"), red("fail"))
+          Global.Emojis.failure(), red("fail"))
       | false =>
         let pkg = Printf.sprintf("const %s = require('%s');", camelCase(name), name) |> bold;
         let example = Printf.sprintf("Import your compiled ReasonML code like:\n%s\n%s %s\n%s\n%s\n%s",
           gray("1 "++altLong), gray("2 "++altLong), pkg, gray("3 "++altLong), gray("4 "++altLong++" // rest of code..."), gray("5 "++altLong));
         Printf.sprintf("%s%s\n%s %s", 
-          getEmoji("sparkles"), green("done"), green("success"), example)
+          Global.Emojis.success(), green("done"), green("success"), example)
     };
   };
 
@@ -66,7 +66,7 @@ module InitCommand {
      *   | (true, true, false) => create /lib/js/<name> (success)
      *   | (true, true, true) => do nothing (success)
      */
-    Printf.sprintf("%s %sValidating target... %s Unfinished", position, getEmoji("open_file_folder"), yellow("warning")) |> Js.log;
+    Printf.sprintf("%s %sValidating target... %s Unfinished", position, Global.Emojis.validate(), yellow("warning")) |> Js.log;
     true
   };
 
@@ -75,15 +75,16 @@ module InitCommand {
     let (source, dest) = buildRelativeSymlinkPaths(name, directory);
     let position = Printf.sprintf("[%d/%d]", index, total) |> gray;
     let packageLocation = Path.combinePaths([rootDirectory, "package.json"]);
+    let prefix = Printf.sprintf("%s %sAdding postinstall... ", position, Global.Emojis.postinstall());
     let postInstallCommand = Printf.sprintf("node -e \"var s='%s',d='%s',fs=require('fs');if(fs.existsSync(d)===false){fs.symlinkSync(s,d,'dir')};\"", source, dest);
     let success = appendToPackageScripts(packageLocation, postInstallCommand);
     switch success {
-      | true => Printf.sprintf("%s %sAdding postinstall... %s", position, getEmoji("zap"), green("success")) |> Js.log
+      | true => Printf.sprintf("%s%s", prefix, green("success")) |> Js.log
       | false =>
         let postInstallCommand' = Printf.sprintf("node -e \\\"var s='%s',d='%s',fs=require('fs');if(fs.existsSync(d)===false){fs.symlinkSync(s,d,'dir')};\\\"", source, dest);
         let prettyPostInstallCommand = Printf.sprintf("\"postinstall\": \"%s\"", postInstallCommand') |> bold;
-        Printf.sprintf("%s %sAdding postinstall... %s Unable to automatically add postinstall script\n%sAdd this to your `package.json` scripts:\n   %s",
-          position, getEmoji("zap"), yellow("warning"), altCodeDirectional, prettyPostInstallCommand)
+        Printf.sprintf("%s%s Unable to automatically add postinstall script\n%sAdd this to your `package.json` scripts:\n   %s",
+          prefix, yellow("warning"), altCodeDirectional, prettyPostInstallCommand)
           |> Js.log
     };
     true
@@ -107,11 +108,15 @@ module InitCommand {
     finishWithFailure^
   };
 
-  let main = (name, directory, rootDirectory, version) : unit => {
+  let main = (name, directory, rootDirectory, version, useEmojis : option(string)) : unit => {
     Printf.sprintf("add-reason init v%s", version)
       |> white
       |> bold
       |> Js.log;
+    Global.Emojis.use := switch useEmojis {
+      | Some(_) => true
+      | None => false
+    };
     let stepsAsFunctions = [
       performConfigCreation,
       performEndpointSetup,

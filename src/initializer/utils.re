@@ -76,7 +76,7 @@ module FsPolyfill {
     /* Should exist */
     let isValidPathDest = targetDirectory |> safeFileExists;
 
-    let prefix = position ++ getEmoji("link") ++ "Linking package... ";
+    let prefix = position ++ Global.Emojis.linking() ++ "Linking package... ";
     let success = switch (existsSource, existsDest, isValidPathDest) {
       | (_, _, false) =>
       Printf.sprintf("%s%s Couldn't find your target's directory. Do you have a typo?\n%s%s",
@@ -111,7 +111,7 @@ module FsPolyfill {
     try {
       let (index, total) = position;
       let position = Printf.sprintf("[%d/%d] ", index, total) |> gray;
-      let prefix = position ++ getEmoji("pencil2") ++ "Creating config... ";
+      let prefix = position ++ Global.Emojis.config() ++ "Creating config... ";
 
       /* Should not exist, but if it doesn't we just ignore and warn */
       let existsConfig = safeFileExists(filename);
