@@ -17,7 +17,7 @@ test:
 travis-test:
 	$(call print_msg, Running tests in Travis Environment... )
 	# simulate a postinstall
-	node -e "var s='../lib/js/src/initializer',d='./node_modules/initializer',fs=require('fs');if(fs.existsSync(d)===false){fs.symlinkSync(s,d,'dir')};"
+	# node -e "var s='../lib/js/src/initializer',d='./node_modules/initializer',fs=require('fs');if(fs.existsSync(d)===false){fs.symlinkSync(s,d,'dir')};"
 	node ./__tests__/
 
 clean:

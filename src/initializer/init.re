@@ -13,6 +13,12 @@ module InitCommand {
   let defaultNodeModulesPath = "node_modules";
   let bsConfigFile = "bsconfig.json";
 
+  let buildRelativeSymlinkPaths = (name, directory) : (string, string) => {
+    let source = Path.combinePaths(["..", defaultCompiledPath, directory], ~useLeadingSlash=false);
+    let dest = Path.combinePaths([".", defaultNodeModulesPath, name], ~useLeadingSlash=false);
+    (source, dest)
+  };
+
   let getCompleteMessage = (finishWithFailure, name) : string => {
     switch finishWithFailure {
       | true =>
@@ -59,11 +65,9 @@ module InitCommand {
   };
 
   let performPostInstall = (position, name, directory, rootDirectory) : bool => {
-    open Path;
     let (index, total) = position;
     let position = Printf.sprintf("[%d/%d]", index, total) |> gray;
-    let source = combinePaths(["..", defaultCompiledPath, directory], ~useLeadingSlash=false);
-    let dest = combinePaths([".", defaultNodeModulesPath, name], ~useLeadingSlash=false);
+    let (source, dest) = buildRelativeSymlinkPaths(name, directory);
     let postInstallCommand = Printf.sprintf("var s='%s',d='%s',fs=require('fs');if(fs.existsSync(d)===false){fs.symlinkSync(s,d,'dir')};",
       source, dest);
     Printf.sprintf("%s %sAdding postinstall... %s", position, getEmoji("zap"), green("success"))
