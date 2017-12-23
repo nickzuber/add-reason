@@ -13,10 +13,7 @@ const VERSION = require('./src/config').VERSION;
 
 program.version(VERSION)
   .usage('add-reason [command] [options]')
-  .option('--no-emojis', 'disable the emojis in the output')
-  .option(
-    '--include-postinstall', `add a postinstall script that adds a symlink to your compiled ReasonML. This is
-                       an opt-in because a postinstall can cause issues with CI like Travis or Jenkins`);
+  .option('--no-emojis', 'disable the emojis in the output');
 
 program.command('init <package-name> <directory>')
   .description('set up Reason directory, config files, and symlink')

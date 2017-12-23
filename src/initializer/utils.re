@@ -10,7 +10,6 @@ external throwIfFileDNE : string => bool = "lstatSync";
 [@bs.val] [@bs.module "fs"]
 external createAndWriteToFile : (string, string) => unit = "writeFileSync";
 
-
 module Path {
   /**
    * Removes any leading and trailing slashes on the input path string and 
@@ -59,7 +58,7 @@ module Path {
 };
 
 
-module Fs_Polyfill {
+module FsPolyfill {
   let safeFileExists = (file) : bool => {
     try { let _ = throwIfFileDNE(file); true
     } { | _ => false }
@@ -120,7 +119,7 @@ module Fs_Polyfill {
         | false =>
           createAndWriteToFile(filename, contents);
           let filename = filename |> bold;
-          Printf.sprintf("%s%s", prefix, green("success"))
+          Printf.sprintf("%s%s Unfinished", prefix, yellow("warning"))
             |> Js.log;
         | true =>
           Printf.sprintf("%s%s You already have a bsconfig file. Skipping this step.", prefix, yellow("warning"))

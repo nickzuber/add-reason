@@ -3,5 +3,5 @@ npm-debug.log
 /lib/bs/
 /node_modules/
 
-/__tests__/mockRoot/node_modules
-/__tests__/mockRoot/bsconfig.json
+/tests/mockRoot/node_modules
+/tests/mockRoot/bsconfig.json
