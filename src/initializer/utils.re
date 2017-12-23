@@ -119,7 +119,7 @@ module FsPolyfill {
         | false =>
           createAndWriteToFile(filename, contents);
           let filename = filename |> bold;
-          Printf.sprintf("%s%s Unfinished", prefix, yellow("warning"))
+          Printf.sprintf("%s%s", prefix, green("success"))
             |> Js.log;
         | true =>
           Printf.sprintf("%s%s You already have a bsconfig file. Skipping this step.", prefix, yellow("warning"))
