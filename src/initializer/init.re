@@ -26,13 +26,13 @@ module InitCommand {
     switch finishWithFailure {
       | true =>
         Printf.sprintf("%s%s See which step went wrong", 
-          Global.Emojis.failure(), red("fail"))
+          getEmoji("no_entry_sign"), red("fail"))
       | false =>
         let pkg = Printf.sprintf("const %s = require('%s');", camelCase(name), name) |> bold;
         let example = Printf.sprintf("Import your compiled ReasonML code like:\n%s\n%s %s\n%s\n%s\n%s",
           gray("1 "++altLong), gray("2 "++altLong), pkg, gray("3 "++altLong), gray("4 "++altLong++" // rest of code..."), gray("5 "++altLong));
         Printf.sprintf("%s%s\n%s %s", 
-          Global.Emojis.success(), green("done"), green("success"), example)
+          getEmoji("sparkles"), green("done"), green("success"), example)
     };
   };
 
@@ -66,7 +66,7 @@ module InitCommand {
      *   | (true, true, false) => create /lib/js/<name> (success)
      *   | (true, true, true) => do nothing (success)
      */
-    Printf.sprintf("%s %sValidating target... %s Unfinished", position, Global.Emojis.validate(), yellow("warning")) |> Js.log;
+    Printf.sprintf("%s %sValidating target... %s Unfinished", position, getEmoji("open_file_folder"), yellow("warning")) |> Js.log;
     true
   };
 
@@ -75,7 +75,7 @@ module InitCommand {
     let (source, dest) = buildRelativeSymlinkPaths(name, directory);
     let position = Printf.sprintf("[%d/%d]", index, total) |> gray;
     let packageLocation = Path.combinePaths([rootDirectory, "package.json"]);
-    let prefix = Printf.sprintf("%s %sAdding postinstall... ", position, Global.Emojis.postinstall());
+    let prefix = Printf.sprintf("%s %sAdding postinstall... ", position, getEmoji("nut_and_bolt"));
     let postInstallCommand = Printf.sprintf("node -e \"var s='%s',d='%s',fs=require('fs');if(fs.existsSync(d)===false){fs.symlinkSync(s,d,'dir')};\"", source, dest);
     let success = appendToPackageScripts(packageLocation, postInstallCommand);
     switch success {
@@ -108,15 +108,11 @@ module InitCommand {
     finishWithFailure^
   };
 
-  let main = (name, directory, rootDirectory, version, useEmojis : option(string)) : unit => {
+  let main = (name, directory, rootDirectory, version) : unit => {
     Printf.sprintf("add-reason init v%s", version)
       |> white
       |> bold
       |> Js.log;
-    Global.Emojis.use := switch useEmojis {
-      | Some(_) => true
-      | None => false
-    };
     let stepsAsFunctions = [
       performConfigCreation,
       performEndpointSetup,
