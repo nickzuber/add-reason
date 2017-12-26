@@ -1,6 +1,6 @@
 ####{BSB GENERATED: NO EDIT
 B lib/bs
-FLG -open ReasonTemplate
+FLG -open AddReason
 FLG -ppx /Users/nick/.nvm/versions/node/v7.10.1/lib/node_modules/bs-platform/lib/bsppx.exe
 S /Users/nick/projects/add-reason/node_modules/bs-platform/lib/ocaml
 B /Users/nick/projects/add-reason/node_modules/bs-platform/lib/ocaml

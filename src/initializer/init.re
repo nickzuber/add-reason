@@ -54,20 +54,49 @@ module InitCommand {
   };
 
   let performEndpointSetup = (position, name, directory, rootDirectory) : bool => {
+    open FsPolyfill;
+    open Path;
     let (index, total) = position;
     let position = Printf.sprintf("[%d/%d]", index, total) |> gray;
+
+    let lib = combinePaths([rootDirectory, "lib"]);
+    let lib_js = combinePaths([lib, "js"]);
+    let lib_js_name = combinePaths([lib_js, directory]);
+
+    let existsLib = safeFileExists(lib);
+    let existsLibJs = safeFileExists(lib_js);
+    let existsLibJsName = safeFileExists(lib_js_name);
+
+    let success = switch (existsLib, existsLibJs, existsLibJsName) {
+      | (false, _, _) =>
+        Printf.sprintf("%s %sValidating target... %s",
+          position, getEmoji("open_file_folder"), green("fail"))
+          |> Js.log;
+        false
+      | (true, false, _) =>
+        Printf.sprintf("%s %sValidating target... %s",
+          position, getEmoji("open_file_folder"), green("fail"))
+          |> Js.log;
+        false
+      | (true, true, false) =>
+        Printf.sprintf("%s %sValidating target... %s",
+          position, getEmoji("open_file_folder"), green("fail"))
+          |> Js.log;
+        false
+      | (true, true, true) => 
+        Printf.sprintf("%s %sValidating target... %s",
+          position, getEmoji("open_file_folder"), green("success"))
+          |> Js.log;
+        true
+    };
+    success
     /** @TODO
-     * check for lib/           <- a
-     * check for lib/js         <- b
-     * check for lib/js/<name>  <- c
      * switch (a, b, c) { ...
      *   | (false, _, _) => create all 3 (success)
      *   | (true, false, _) => create /lib/js and /libjs/<name> (warning, lib exists and we gonna use it)
      *   | (true, true, false) => create /lib/js/<name> (success)
      *   | (true, true, true) => do nothing (success)
      */
-    Printf.sprintf("%s %sValidating target... %s Unfinished", position, getEmoji("open_file_folder"), yellow("warning")) |> Js.log;
-    true
   };
 
   let performPostInstall = (position, name, directory, rootDirectory) : bool => {
