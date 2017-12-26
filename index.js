@@ -4,7 +4,6 @@
 
 const path = require('path');
 const program = require('commander');
-const camelcase = require('lodash.camelcase');
 const initializer = require('initializer');
 const OutputPatcher = require('./src/patches').OutputPatcher;
 const rootDirectory = process.cwd();
@@ -16,12 +15,9 @@ program.version(VERSION)
   .usage('add-reason [command] [options]')
   .option('--no-emojis', 'disable the emojis in the output');
 
-program.command('init <directory> [package-name]')
+program.command('init <package-name> <directory>')
   .description('set up Reason directory, config files, and symlink')
-  .action((directory, name) => {
-    // name = name || directory.replace(/\/+$/, '').split('/').pop() || 'pkg';
-    handleInit(name, directory, rootDirectory, VERSION, program.emojis)
-  });
+  .action((name, directory) => handleInit(name, directory, rootDirectory, VERSION, program.emojis));
 
  program.command('link <package-name> <directory>')
   .description('create a symlink with the given package name')
