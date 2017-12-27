@@ -24,12 +24,12 @@ program.command('init <directory> [package-name]')
     handleInit(name, directory, rootDirectory, VERSION, program.linking);
   });
 
- program.command('link <package-name> <directory>')
+ program.command('link <package-name>')
   .description('create a symlink with the given package name')
   .action((name, directory) => {});
 
- program.command('rename <new-alias>')
-  .description('change the current Reason package name')
+ program.command('rename <package-name>')
+  .description('change the current Reason package name symlink')
   .action((alias) => {});
 
 program.command('unlink <package-name>')
