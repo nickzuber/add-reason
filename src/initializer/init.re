@@ -9,12 +9,16 @@ external camelCase : string => string = "lodash.camelcase";
 external appendToPackageScripts : (string, string) => bool = "editPackageScripts";
 
 [@bs.val] [@bs.module "../../../../src/patches"]
-external generateConfigContents : (string, string) => string = "generateConfigContents";
+external generateConfigContents : (string, string) => string = "";
+
+[@bs.val] [@bs.module "../../../../src/patches"]
+external generateMerlinContents : (string, string) => string = "";
 
 module InitCommand {
   let defaultCompiledPath = "/lib/js";
   let defaultNodeModulesPath = "node_modules";
   let bsConfigFile = "bsconfig.json";
+  let merlinFile = ".merlin";
 
   let buildRelativeSymlinkPaths = (name, directory) : (string, string) => {
     let source = Path.combinePaths(["..", defaultCompiledPath, directory], ~useLeadingSlash=false);
@@ -31,9 +35,15 @@ module InitCommand {
         let pkg = Printf.sprintf("const %s = require('%s');", camelCase(name), name) |> bold;
         let example = Printf.sprintf("Import your compiled ReasonML code like:\n%s\n%s %s\n%s\n%s\n%s",
           gray("1 "++altLong), gray("2 "++altLong), pkg, gray("3 "++altLong), gray("4 "++altLong++" // rest of code..."), gray("5 "++altLong));
-        Printf.sprintf("%s%s\n%s %s", 
+        Printf.sprintf("%s%s\n%s %s",
           getEmoji("sparkles"), green("done"), green("success"), example)
     };
+  };
+
+  let checkIfBsPlatformIsInstalled = (rootDirectory) : bool => {
+    let bsPlatformLocation = Path.combinePaths([rootDirectory, defaultNodeModulesPath, "bs-platform"]);
+    let exists = FsPolyfill.safeFileExists(bsPlatformLocation);
+    exists
   };
 
   let performLinking = (position, name, directory, rootDirectory) : bool => {
@@ -53,6 +63,14 @@ module InitCommand {
     success
   };
 
+  let performMerlinCreation = (position, name, directory, rootDirectory) : bool => {
+    let absolutePath = Path.combinePaths([rootDirectory, merlinFile]);
+    let nodeModulesLocation = Path.combinePaths([rootDirectory, defaultNodeModulesPath]);
+    let configContents = generateMerlinContents(directory, nodeModulesLocation);
+    let success = FsPolyfill.attemptToCreateMerlin(position, absolutePath, configContents);
+    success
+  };
+
   let performEndpointSetup = (position, name, directory, rootDirectory) : bool => {
     open FsPolyfill;
     open Path;
@@ -69,20 +87,41 @@ module InitCommand {
 
     let success = switch (existsLib, existsLibJs, existsLibJsName) {
       | (false, _, _) =>
+        let createDirsSuccess = safeCreateDirectory(lib_js_name);
+        let result = if (createDirsSuccess) {
+          green("success")
+        } else {
+          Printf.sprintf("%s Something went wrong when trying to create target directories.\n%s%s",
+            red("failed"), altCodeDirectional, bold(lib_js_name));
+        };
         Printf.sprintf("%s %sValidating target... %s",
-          position, getEmoji("open_file_folder"), green("fail"))
+          position, getEmoji("open_file_folder"), result)
           |> Js.log;
-        false
+        createDirsSuccess
       | (true, false, _) =>
+        let createDirsSuccess = safeCreateDirectory(lib_js_name);
+        let result = if (createDirsSuccess) {
+          yellow("warning") ++ " You already have a `lib` directory, so we're going to use it.";
+        } else {
+          Printf.sprintf("%s Something went wrong when trying to create target directories.\n%s%s",
+            red("failed"), altCodeDirectional, bold(lib_js_name));
+        };
         Printf.sprintf("%s %sValidating target... %s",
-          position, getEmoji("open_file_folder"), green("fail"))
+          position, getEmoji("open_file_folder"), result)
           |> Js.log;
-        false
+        true
       | (true, true, false) =>
+        let createDirsSuccess = safeCreateDirectory(lib_js_name);
+        let result = if (createDirsSuccess) {
+          yellow("warning") ++ " You already have a `lib/js` directory, so we're going to use it.";
+        } else {
+          Printf.sprintf("%s Something went wrong when trying to create target directories.\n%s%s",
+            red("failed"), altCodeDirectional, bold(lib_js_name));
+        };
         Printf.sprintf("%s %sValidating target... %s",
-          position, getEmoji("open_file_folder"), green("fail"))
+          position, getEmoji("open_file_folder"), result)
           |> Js.log;
-        false
+        true
       | (true, true, true) => 
         Printf.sprintf("%s %sValidating target... %s",
           position, getEmoji("open_file_folder"), green("success"))
@@ -93,7 +132,7 @@ module InitCommand {
     /** @TODO
      * switch (a, b, c) { ...
      *   | (false, _, _) => create all 3 (success)
-     *   | (true, false, _) => create /lib/js and /libjs/<name> (warning, lib exists and we gonna use it)
+     *   | (true, false, _) => create /lib/js and /lib/js/<name> (warning, lib exists and we gonna use it)
      *   | (true, true, false) => create /lib/js/<name> (success)
      *   | (true, true, true) => do nothing (success)
      */
@@ -137,19 +176,35 @@ module InitCommand {
     finishWithFailure^
   };
 
-  let main = (name, directory, rootDirectory, version) : unit => {
+  let main = (name, directory, rootDirectory, version, linking) : unit => {
     Printf.sprintf("add-reason init v%s", version)
       |> white
       |> bold
       |> Js.log;
-    let stepsAsFunctions = [
-      performConfigCreation,
-      performEndpointSetup,
-      performLinking,
-      performPostInstall
-    ];
+    let stepsAsFunctions = if (linking) {
+      [ performConfigCreation,
+        performMerlinCreation,
+        performEndpointSetup,
+        performLinking,
+        performPostInstall ];
+    } else {
+      [ performConfigCreation,
+        performMerlinCreation,
+        performEndpointSetup,
+        performPostInstall ];
+    };
     let finishWithFailure = execute(stepsAsFunctions, name, directory, rootDirectory);
+    /* Show message regarding success of the init */
     getCompleteMessage(finishWithFailure, name)
       |> Js.log;
+    /* Prompt is `bs-platform` is not installed */
+    if (!checkIfBsPlatformIsInstalled(rootDirectory)) {
+      let bsPlatform = "bs-platform" |> bold |> white;
+      Printf.sprintf("%s You don't seem to have %s installed yet! Run the command:\n%s%s\n%s  or\n%s%s",
+        yellow("warning"), bsPlatform, altCodeDirectionalNonTerminal, bold("yarn add bs-platform@2.1.0") |> white,
+        altLong, altCodeDirectional, bold("npm install bs-platform@2.1.0") |> white)
+        |> Js.log;
+    };
+    Js.log("")
   };
 };

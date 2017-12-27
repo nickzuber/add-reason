@@ -13,6 +13,7 @@
   "dependencies": {
     "chalk": "^2.3.0",
     "commander": "2.9.0",
+    "fs-extra": "^5.0.0",
     "json-format": "^1.0.1",
     "jsonfile": "^4.0.0",
     "lodash.camelcase": "^4.3.0",

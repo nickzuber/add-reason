@@ -14,13 +14,14 @@ const VERSION = require('./src/config').VERSION;
 
 program.version(VERSION)
   .usage('add-reason [command] [options]')
-  .option('--no-emojis', 'disable the emojis in the output');
+  .option('--no-linking', 'don\'t create the symlink to your compiled ReasonML code');
 
 program.command('init <directory> [package-name]')
   .description('set up Reason directory, config files, and symlink')
   .action((directory, name) => {
+    // given name or last source directory path name or simply `pkg`
     name = name || directory.replace(/\/+$/, '').split('/').pop() || 'pkg';
-    handleInit(name, directory, rootDirectory, VERSION, program.emojis)
+    handleInit(name, directory, rootDirectory, VERSION, program.linking);
   });
 
  program.command('link <package-name> <directory>')

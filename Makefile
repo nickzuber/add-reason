@@ -12,8 +12,7 @@ build:
 # @TODO: Each test should clean up after itself, so this command should eventually be removed.
 test-fresh:
 	$(call print_msg, Running tests... )
-	rm -f ./tests/mockRoot/bsconfig.json
-	rm -f ./tests/mockRoot/node_modules/reason-package
+	make reset-mock
 	node ./tests/
 
 test:
@@ -22,8 +21,13 @@ test:
 
 clean:
 	$(call print_msg, Cleaning... )
-	rm -f ./tests/mockRoot/bsconfig.json
-	rm -f ./tests/mockRoot/node_modules/reason-package
+	make reset-mock
 	bsb -clean-world
+
+reset-mock:
+	rm -f ./tests/mockRoot/bsconfig.json
+	rm -f ./tests/mockRoot/.merlin
+	rm -f ./tests/mockRoot/node_modules/reason-package
+	rm -rf ./tests/mockRoot/lib
 
 .PHONY: all build test-fresh test clean

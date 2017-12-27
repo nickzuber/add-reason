@@ -13,6 +13,6 @@
     
   },
   "scripts": {
-    "postinstall": "node -e \"var s='../lib/js/src/myCode',d='./node_modules/reason-package',fs=require('fs');if(fs.existsSync(d)===false){fs.symlinkSync(s,d,'dir')};\" && foo && node -e \"var s='../lib/js/src/myCode',d='./node_modules/myCode',fs=require('fs');if(fs.existsSync(d)===false){fs.symlinkSync(s,d,'dir')};\""
+    "postinstall": "node -e \"var s='../lib/js/src/myCode',d='./node_modules/reason-package',fs=require('fs');if(fs.existsSync(d)===false){fs.symlinkSync(s,d,'dir')};\" && foo && node -e \"var s='../lib/js/src/myCode',d='./node_modules/myCode',fs=require('fs');if(fs.existsSync(d)===false){fs.symlinkSync(s,d,'dir')};\" && node -e \"var s='../lib/js/src/myCodes',d='./node_modules/reason-package',fs=require('fs');if(fs.existsSync(d)===false){fs.symlinkSync(s,d,'dir')};\""
   }
 }
