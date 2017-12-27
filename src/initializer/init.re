@@ -129,13 +129,6 @@ module InitCommand {
         true
     };
     success
-    /** @TODO
-     * switch (a, b, c) { ...
-     *   | (false, _, _) => create all 3 (success)
-     *   | (true, false, _) => create /lib/js and /lib/js/<name> (warning, lib exists and we gonna use it)
-     *   | (true, true, false) => create /lib/js/<name> (success)
-     *   | (true, true, true) => do nothing (success)
-     */
   };
 
   let performPostInstall = (position, name, directory, rootDirectory) : bool => {

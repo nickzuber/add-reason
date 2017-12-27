@@ -5,4 +5,4 @@ node_js:
   - '6'
   - '7'
   - 'lts/*'
-script: make test
+script: make
