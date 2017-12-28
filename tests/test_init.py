@@ -1,8 +1,8 @@
 import os
 import subprocess
 
-from framework.base_command_test_case import BaseCommandTestCase
-from framework.context_manager import cd
+from tests.framework.base_command_test_case import BaseCommandTestCase
+from tests.framework.context_manager import cd
 
 
 class TestInit(BaseCommandTestCase):
