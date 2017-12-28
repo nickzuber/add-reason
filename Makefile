@@ -1,9 +1,7 @@
 
 print_msg = @printf "\n\033[1;34m***%s***\033[0m\n" "$(1)"
 
-all:
-	make build
-	make test-fresh
+all: build test-fresh
 
 build:
 	$(call print_msg, Building... )
@@ -23,6 +21,10 @@ clean:
 	$(call print_msg, Cleaning... )
 	make reset-mock
 	bsb -clean-world
+
+python-tests:
+	$(call print_msg, Running tests... )
+	nosetests ./tests
 
 reset-mock:
 	rm -f ./tests/mockRoot/bsconfig.json

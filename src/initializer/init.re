@@ -77,16 +77,23 @@ module InitCommand {
     let (index, total) = position;
     let position = Printf.sprintf("[%d/%d]", index, total) |> gray;
 
+    let directoryPath = combinePaths([rootDirectory, directory]);
     let lib = combinePaths([rootDirectory, "lib"]);
     let lib_js = combinePaths([lib, "js"]);
     let lib_js_name = combinePaths([lib_js, directory]);
 
+    let existsDirectory = safeFileExists(directoryPath);
     let existsLib = safeFileExists(lib);
     let existsLibJs = safeFileExists(lib_js);
     let existsLibJsName = safeFileExists(lib_js_name);
 
-    let success = switch (existsLib, existsLibJs, existsLibJsName) {
-      | (false, _, _) =>
+    let success = switch (existsLib, existsLibJs, existsLibJsName, existsDirectory) {
+      | (_, _, _, false) =>
+        Printf.sprintf("%s %sValidating target... %s Couldn't find your source directory of ReasonML code. Do you have a typo?\n%s%s",
+          position, getEmoji("open_file_folder"), red("failed"), altCodeDirectional, bold(directoryPath))
+          |> Js.log;
+        false
+      | (false, _, _, _) =>
         let createDirsSuccess = safeCreateDirectory(lib_js_name);
         let result = if (createDirsSuccess) {
           green("success")
@@ -98,7 +105,7 @@ module InitCommand {
           position, getEmoji("open_file_folder"), result)
           |> Js.log;
         createDirsSuccess
-      | (true, false, _) =>
+      | (true, false, _, _) =>
         let createDirsSuccess = safeCreateDirectory(lib_js_name);
         let result = if (createDirsSuccess) {
           yellow("warning") ++ " You already have a `lib` directory, so we're going to use it.";
@@ -110,7 +117,7 @@ module InitCommand {
           position, getEmoji("open_file_folder"), result)
           |> Js.log;
         true
-      | (true, true, false) =>
+      | (true, true, false, _) =>
         let createDirsSuccess = safeCreateDirectory(lib_js_name);
         let result = if (createDirsSuccess) {
           yellow("warning") ++ " You already have a `lib/js` directory, so we're going to use it.";
@@ -122,7 +129,7 @@ module InitCommand {
           position, getEmoji("open_file_folder"), result)
           |> Js.log;
         true
-      | (true, true, true) => 
+      | (true, true, true, _) => 
         Printf.sprintf("%s %sValidating target... %s",
           position, getEmoji("open_file_folder"), green("success"))
           |> Js.log;
