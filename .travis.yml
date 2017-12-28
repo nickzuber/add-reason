@@ -9,4 +9,10 @@ node_js:
   - 'lts/*'
 python:
   - "3.6"
+before_install:
+  - sudo apt-get -y install python3-pip python-dev
+  - sudo pip3 install nose
+  - python3 -V
+  - pip3 -V
+  - nosetests -V
 script: make python-tests
