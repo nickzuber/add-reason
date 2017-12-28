@@ -1,3 +1,5 @@
+sudo: required
+dist: trusty
 language: node_js
 node_js:
   - '4'
@@ -5,4 +7,6 @@ node_js:
   - '6'
   - '7'
   - 'lts/*'
+python:
+  - "3.6"
 script: make python-tests
