@@ -10,7 +10,8 @@ node_js:
 python:
   - "3.6"
 before_install:
-  - sudo apt-get -y install python3-pip python-dev
+  - sudo apt-get update
+  - sudo apt-get -y install python3.6 python3-pip
   - sudo pip3 install nose
   - python3 -V
   - pip3 -V
