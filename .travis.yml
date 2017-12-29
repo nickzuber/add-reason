@@ -15,4 +15,6 @@ before_install:
   - python3 -V
   - pip3 -V
   - nosetests -V
+  - npm link
+  - add-reason -V
 script: make python-tests

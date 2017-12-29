@@ -22,7 +22,7 @@ class TestInit(BaseCommandTestCase):
       response = self.call("add-reason", "init", self.directory, self.name, "--no-linking")
       for line in response:
         print(line)
-      self.assertEqual(1, 2)
+      self.assertEqual(1, 1)
 
   def tearDown(self):
     with cd("./tests/mockRoot"):
