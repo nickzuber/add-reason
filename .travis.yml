@@ -19,5 +19,5 @@ before_install:
   - nosetests -V
   - npm link
   - add-reason -V
-script: make python
+script: make test
 
