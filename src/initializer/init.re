@@ -190,8 +190,7 @@ module InitCommand {
     } else {
       [ performConfigCreation,
         performMerlinCreation,
-        performEndpointSetup,
-        performPostInstall ];
+        performEndpointSetup ];
     };
     let finishWithFailure = execute(stepsAsFunctions, name, directory, rootDirectory);
     /* Show message regarding success of the init */
