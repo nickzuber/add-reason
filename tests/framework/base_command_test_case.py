@@ -10,6 +10,7 @@ class BaseCommandTestCase(TestCase):
 
   def call(self, *commands):
     response = subprocess.check_output(list(commands))
+    response = bytes(response)
     parse_output_line = r'\[(\d)/(\d)\] .*  ([a-zA-Z ]*)... (\w*)([a-zA-Z\'\"\!\?\(\)\[\]\:\; ]*)?'
     list_of_parsed_lines = []
     for line in response.split("\n"):
