@@ -17,9 +17,10 @@ clean:
 	bsb -clean-world
 
 reset-mock:
-	rm -f ./tests/mockRoot/bsconfig.json
-	rm -f ./tests/mockRoot/.merlin
-	rm -f ./tests/mockRoot/node_modules/reason-package
-	rm -rf ./tests/mockRoot/lib
+	rm -f ./tests/root_for_testing/bsconfig.json
+	rm -f ./tests/root_for_testing/.merlin
+	rm -f ./tests/root_for_testing/node_modules/reason-package
+	rm -rf ./tests/root_for_testing/lib
+	cp package.empty_scripts.json package.json
 
 .PHONY: all build test clean reset-mock
