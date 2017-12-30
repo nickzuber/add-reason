@@ -22,4 +22,3 @@ before_install:
   - npm link
   - add-reason -V
 script: make test
-
