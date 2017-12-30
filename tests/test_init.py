@@ -20,7 +20,7 @@ class TestInit(BaseCommandTestCase):
       for _, result, _ in results['steps']:
         if not self.is_success(result):
           all_steps_passed = False
-      self.assertTrue(all_steps_passed, 'All steps did not pass successfully')
+      self.assertTrue(all_steps_passed, 'All steps did not pass successfully\n{}'.format(results))
       self.assertEqual(results['total_steps'], 5, 'The total number of steps was not 5')
 
   def test_steps_pass_no_linking_flag(self):
@@ -30,7 +30,7 @@ class TestInit(BaseCommandTestCase):
       for _, result, _ in results['steps']:
         if not self.is_success(result):
           all_steps_passed = False
-      self.assertTrue(all_steps_passed, 'All steps did not pass successfully')
+      self.assertTrue(all_steps_passed, 'All steps did not pass successfully\n{}'.format(results))
       self.assertEqual(results['total_steps'], 3, 'The total number of steps was not 3')
 
   def test_bsconfig_was_created(self):
