@@ -8,12 +8,14 @@ node_js:
   - '7'
   - 'lts/*'
 python:
-  - "3.6"
+  - "3.4.3"
 before_install:
   - sudo apt-get -y install python3-pip python-dev
   - sudo pip3 install nose
   - pyenv --version
   - pyenv install 3.4.3
+  - pyenv global 3.4.3
+  - eval "$(pyenv init -)"
   - python -V
   - pip3 -V
   - nosetests -V
