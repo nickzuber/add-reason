@@ -4,5 +4,7 @@ npm-debug.log
 /lib/bs/
 /node_modules/
 
+/tests/root_for_testing/node_modules
+!/tests/root_for_testing/node_modules/persist.lock
 /tests/root_for_testing/bsconfig.json
 /tests/root_for_testing/.merlin

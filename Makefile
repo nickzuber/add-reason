@@ -19,8 +19,9 @@ clean:
 reset-mock:
 	rm -f ./tests/root_for_testing/bsconfig.json
 	rm -f ./tests/root_for_testing/.merlin
-	rm -f ./tests/root_for_testing/node_modules/reason-package
 	rm -rf ./tests/root_for_testing/lib
-	cp package.empty_scripts.json package.json
+	rm -f ./tests/root_for_testing/node_modules/*
+	touch ./tests/root_for_testing/node_modules/persist.lock
+	cp ./tests/root_for_testing/package.empty_scripts.json ./tests/root_for_testing/package.json
 
 .PHONY: all build test clean reset-mock
