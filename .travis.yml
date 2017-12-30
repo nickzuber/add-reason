@@ -1,9 +1,11 @@
 language: python
-  - "3.4.3"
+  - 3.4
 before_install:
   - npm link
   - add-reason -V
 install:
-  - pip install -r requirements.txt
+  - python -V
+  - pip -V
+  - pip install nose
 script:
   - make test
