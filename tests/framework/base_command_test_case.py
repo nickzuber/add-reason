@@ -1,10 +1,12 @@
 import re
+import json
 import os
 import subprocess
 from unittest import TestCase
 
+
 class BaseCommandTestCase(TestCase):
-  
+
   _working_directory = os.path.dirname(os.path.realpath(__file__))
   _success = 'success'
   _failed = 'failed'
@@ -42,6 +44,9 @@ class BaseCommandTestCase(TestCase):
 
   def is_warning(self, result):
     return result == self._warning
+
+  def read_json(self, fname):
+    return json.load(open(fname))
 
   def tearDown(self):
     pass

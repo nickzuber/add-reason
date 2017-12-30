@@ -13,6 +13,6 @@
     
   },
   "scripts": {
-    
+    "postinstall": "node foo && make bar"
   }
 }
