@@ -103,6 +103,32 @@ class TestInit(BaseCommandTestCase):
       contents = self.read_json('package.json')
       self.assertNotIn('postinstall', contents['scripts'], 'Postinstall was created when it should not have been')
 
+  def test_config_was_not_created_when_given_bad_target(self):
+    with cd('./tests/root_for_testing'):
+      self.call("add-reason", "init", 'some/bad/target', self.name)
+      existsMerlin = self.exists('.merlin')
+      existsBsconfig = self.exists('bsconfig.json')
+      self.assertFalse(existsMerlin, '.merlin file was created even though we gave a bad target')
+      self.assertFalse(existsBsconfig, 'bsconfig.json file was created even though we gave a bad target')
+
+  def test_config_was_not_created_when_given_bad_target_no_linking(self):
+    with cd('./tests/root_for_testing'):
+      self.call("add-reason", "init", 'some/bad/target', self.name, "--no-linking")
+      existsMerlin = self.exists('.merlin')
+      existsBsconfig = self.exists('bsconfig.json')
+      self.assertFalse(existsMerlin, '.merlin file was created even though we gave a bad target')
+      self.assertFalse(existsBsconfig, 'bsconfig.json file was created even though we gave a bad target')
+
+  def test_postinstall_was_not_created_when_given_bad_target(self):
+    with cd('./tests/root_for_testing'):
+      self.call("cp", "package.other_postinstall.json", "package.json")
+      contents = self.read_json('package.json')
+      postinstall_before = contents['scripts']['postinstall']
+      self.call("add-reason", "init", 'some/bad/target', self.name)
+      contents = self.read_json('package.json')
+      postinstall_after = contents['scripts']['postinstall']
+      self.assertEqual(postinstall_before, postinstall_after, 'The postinstall script was altered even though we gave bad target')
+
   def tearDown(self):
     with cd('./tests/root_for_testing'):
       self.call("rm", "-f", "bsconfig.json")

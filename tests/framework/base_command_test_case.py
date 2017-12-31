@@ -27,7 +27,6 @@ class BaseCommandTestCase(TestCase):
         line_as_list = []
         for i in range(1, matches.lastindex + 1):
           line_as_list.append(matches.group(i))
-
         dict_of_parsed_lines['steps'].append((
           line_as_list[2],  # title of step
           line_as_list[3],  # success of step
@@ -47,6 +46,9 @@ class BaseCommandTestCase(TestCase):
 
   def read_json(self, fname):
     return json.load(open(fname))
+
+  def exists(self, fname):
+    return os.path.isfile(fname)
 
   def tearDown(self):
     pass
