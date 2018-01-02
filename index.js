@@ -12,6 +12,8 @@ const rootDirectory = process.cwd();
 const handleInit = initializer.handleInit();
 const VERSION = require('./src/config').VERSION;
 
+const unknownCommand = program => !program.args.map(arg => typeof arg).includes('object')
+
 program.version(VERSION)
   .usage('add-reason [command] [options]')
   .option('--no-linking', 'don\'t create the symlink to your compiled ReasonML code');
@@ -38,9 +40,17 @@ program.command('unlink <package-name>')
   
 OutputPatcher(program);
 
+program.parse(process.argv);
+
 // Set default command to --help
 if (!process.argv.slice(2).length) {
   program.outputHelp();
+  process.exit(0);
 }
 
-program.parse(process.argv);
+if (unknownCommand(program)) {
+  const directory = program.args[0];
+  const name = program.args[1] || directory.replace(/\/+$/, '').split('/').pop() || 'pkg';
+  handleInit(name, directory, rootDirectory, VERSION, program.linking);
+  process.exit(0);
+}
