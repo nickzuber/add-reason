@@ -8,3 +8,4 @@ npm-debug.log
 !/tests/root_for_testing/node_modules/persist.lock
 /tests/root_for_testing/bsconfig.json
 /tests/root_for_testing/.merlin
+/tests/root_for_testing/package.json
