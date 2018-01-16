@@ -7,6 +7,10 @@ build:
 	$(call print_msg, Building... )
 	bsb -make-world
 
+watch:
+	$(call print_msg, Building & Watching... )
+	bsb -w -make-world
+
 test:
 	$(call print_msg, Running tests... )
 	nosetests ./tests
@@ -24,4 +28,4 @@ reset-mock:
 	touch ./tests/root_for_testing/node_modules/persist.lock
 	cp ./tests/root_for_testing/package.empty_scripts.json ./tests/root_for_testing/package.json
 
-.PHONY: all build test clean reset-mock
+.PHONY: all build watch test clean reset-mock

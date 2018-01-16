@@ -5,11 +5,11 @@
 const path = require('path');
 const program = require('commander');
 const camelcase = require('lodash.camelcase');
-const initializer = require('initializer');
+const commands = require('commands');
 const OutputPatcher = require('./src/patches').OutputPatcher;
 const rootDirectory = process.cwd();
 
-const handleInit = initializer.handleInit();
+const handleSetup = commands.handleSetup();
 const VERSION = require('./src/config').VERSION;
 
 const unknownCommand = program => !program.args.map(arg => typeof arg).includes('object')
@@ -18,12 +18,12 @@ program.version(VERSION)
   .usage('add-reason [command] [options]')
   .option('--no-linking', 'don\'t create the symlink to your compiled ReasonML code');
 
-program.command('init <directory> [package-name]')
+program.command('setup <directory> [package-name]')
   .description('set up Reason directory, config files, and symlink')
   .action((directory, name) => {
     // given name or last source directory path name or simply `pkg`
     name = name || directory.replace(/\/+$/, '').split('/').pop() || 'pkg';
-    handleInit(name, directory, rootDirectory, VERSION, program.linking);
+    handleSetup(name, directory, rootDirectory, VERSION, program.linking);
   });
 
  program.command('link <package-name>')
@@ -37,7 +37,7 @@ program.command('init <directory> [package-name]')
 program.command('unlink <package-name>')
   .description('removes the given symlink')
   .action((name) => {});
-  
+
 OutputPatcher(program);
 
 program.parse(process.argv);
@@ -51,6 +51,6 @@ if (!process.argv.slice(2).length) {
 if (unknownCommand(program)) {
   const directory = program.args[0];
   const name = program.args[1] || directory.replace(/\/+$/, '').split('/').pop() || 'pkg';
-  handleInit(name, directory, rootDirectory, VERSION, program.linking);
+  handleSetup(name, directory, rootDirectory, VERSION, program.linking);
   process.exit(0);
 }

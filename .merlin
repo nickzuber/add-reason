@@ -6,6 +6,6 @@ S /Users/nick/projects/add-reason/node_modules/bs-platform/lib/ocaml
 B /Users/nick/projects/add-reason/node_modules/bs-platform/lib/ocaml
 FLG -nostdlib -no-alias-deps -color always
 FLG -w -30-40+6+7+27+32..39+44+45+101-26-27
-S src/initializer
-B lib/bs/src/initializer
+S src/commands
+B lib/bs/src/commands
 ####BSB GENERATED: NO EDIT}

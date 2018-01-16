@@ -19,8 +19,9 @@ const OutputPatcher = (commander) => {
   commander.helpInformation = newNativeHelpMethod;
 };
 
-/** @note Everything needs to be sync because of the ordering of the output.
- * Takes a path to a `package.json` file and adds the given command to its `scripts` key. 
+/**
+ * Takes a path to a `package.json` file and adds the given command to its `scripts` key.
+ * Note that everything needs to be sync because of the ordering of the output.
  * @param {string} file The absolute path to the `package.json` file.
  * @param {string} command The command to add to the `scripts` key.
  * @return {void} The success of the operations.
@@ -86,7 +87,7 @@ const generateConfigContents = (source, packageLocation) => {
  */
 const generateMerlinContents = (source, nodeModulesDirectory) => {
   // `process.execPath` will give us the absolute path to the users node executable file, which
-  // is located in the `bin` directory. We remove the last two parts of the path to get to the 
+  // is located in the `bin` directory. We remove the last two parts of the path to get to the
   // root. We end up removing `node` (the executable) and `bin` when we do this, leaving us in
   // the root.
   const nodeExecRoot = process.execPath.split('/').slice(0, -2).join('/');
@@ -103,7 +104,19 @@ FLG -w -30-40+6+7+27+32..39+44+45+101-26-27
 `;
 };
 
+const flush = () => {
+  if (process.stdout.clearLine && process.stdout.cursorTo) {
+    process.stdout.clearLine();
+    process.stdout.cursorTo(0);
+  } else {
+    const readline = require('readline');
+    readline.clearLine(process.stdout, 0);
+    readline.cursorTo(process.stdout, 0, null);
+  }
+};
+
 module.exports.OutputPatcher = OutputPatcher;
 module.exports.editPackageScripts = editPackageScripts;
 module.exports.generateConfigContents = generateConfigContents;
 module.exports.generateMerlinContents = generateMerlinContents;
+module.exports.flush = flush;

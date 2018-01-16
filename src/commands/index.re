@@ -1,0 +1,2 @@
+
+let handleSetup = () => Setup.main;

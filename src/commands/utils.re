@@ -1,20 +1,5 @@
 
-open GenericBindings;
-
-[@bs.val] [@bs.module "fs"]
-external createSymlink : (string, string) => unit = "symlinkSync";
-
-[@bs.val] [@bs.module "fs"]
-external throwIfFileDNE : string => bool = "lstatSync";
-
-[@bs.val] [@bs.module "fs"]
-external createAndWriteToFile : (string, string) => unit = "writeFileSync";
-
-[@bs.val] [@bs.module "fs-extra"]
-external createDirectory : (string) => unit = "ensureDirSync";
-
-[@bs.val] [@bs.module "path"]
-external sep : string = "";
+open Bindings;
 
 module Path {
   /** Removes any leading and trailing slashes on the input path string.
@@ -28,7 +13,7 @@ module Path {
     let ending = if (last == sep) { size - starting - 1; } else { size - starting; };
     String.sub(path, starting, ending)
   };
-  
+
   let combinePaths = (~useLeadingSlash=true, paths) : string => {
     let prefix = useLeadingSlash ? sep : "";
     let rec combine = (paths, result) => {
@@ -61,7 +46,7 @@ module Path {
 };
 
 
-module FsPolyfill {
+module Fs {
   let safeFileExists = (file) : bool => {
     try { let _ = throwIfFileDNE(file); true
     } { | _ => false }
@@ -69,6 +54,16 @@ module FsPolyfill {
 
   let safeCreateDirectory = (dir) : bool => {
     try { let _ = createDirectory(dir); true
+    } { | _ => false }
+  };
+
+  let safeCreateFile = (file, contents) : bool => {
+    try { let _ = createAndWriteToFile(file, contents); true
+    } { | _ => false }
+  };
+
+  let safeCreateSymlink = (source, dest) : bool => {
+    try { let _ = createSymlink(source, dest); true
     } { | _ => false }
   };
 };
