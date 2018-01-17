@@ -65,8 +65,8 @@ external stdout : string => unit = "process.stdout.write";
 external now : unit => int = "";
 
 /**
- * This is incredibly hacky, and I apologize to anyone who looks upon this function. I am not
- * held liable for any loss or damage of eye sight. Hijack the CPU for loading icon swag.
+ * Hijacks the thread so we can slow things down and show what we're doing
+ * whenever we paint, if we choose to do so. Very hacky.
  */
 let sleep = ms => {
   let start = now();
@@ -82,7 +82,7 @@ external random : unit => float = "";
 [@bs.val] [@bs.scope "Math"]
 external floor : float => int = "";
 
-let paint = (~useLoader=true, arg) => {
+let paint = (~blockThread=true, arg) => {
   let parts = [|
     {j|⠋|j},
     {j|⠙|j},
@@ -96,7 +96,7 @@ let paint = (~useLoader=true, arg) => {
     {j|⠏|j},
   |];
   for (i in 0 to Array.length(parts) - 1) {
-    sleep(20);
+    blockThread ? sleep(15) : ();
     flush();
     stdout(parts[i] ++ " " ++ arg);
   };

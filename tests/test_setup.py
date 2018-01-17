@@ -15,33 +15,23 @@ class TestInit(BaseCommandTestCase):
 
   def test_steps_pass(self):
     with cd('./tests/root_for_testing'):
-      results = self.call("add-reason", "setup", self.directory, self.name)
-      all_steps_passed = True
-      for _, result, _ in results['steps']:
-        if not self.is_success(result):
-          all_steps_passed = False
-      self.assertTrue(all_steps_passed, 'All steps did not pass successfully\n{}'.format(results))
-      self.assertEqual(results['total_steps'], 5, 'The total number of steps was not 5')
+      result = self.call("add-reason", "setup", self.directory, self.name)
+      self.assertTrue(result, 'Standard setup call did not pass successfully.')
 
   def test_steps_pass_no_linking_flag(self):
     with cd('./tests/root_for_testing'):
-      results = self.call("add-reason", "setup", self.directory, self.name, "--no-linking")
-      all_steps_passed = True
-      for _, result, _ in results['steps']:
-        if not self.is_success(result):
-          all_steps_passed = False
-      self.assertTrue(all_steps_passed, 'All steps did not pass successfully\n{}'.format(results))
-      self.assertEqual(results['total_steps'], 3, 'The total number of steps was not 3')
+      result = self.call("add-reason", "setup", self.directory, self.name, "--no-linking")
+      self.assertTrue(result, 'Standard --no-linking setup call did not pass successfully.')
 
   def test_bsconfig_was_created(self):
     with cd('./tests/root_for_testing'):
-      results = self.call("add-reason", "setup", self.directory, self.name)
+      self.call("add-reason", "setup", self.directory, self.name)
       exists = os.path.isfile('bsconfig.json')
       self.assertTrue(exists, 'bsconfig.json was never created')
 
   def test_merlin_was_created(self):
     with cd('./tests/root_for_testing'):
-      results = self.call("add-reason", "setup", self.directory, self.name)
+      self.call("add-reason", "setup", self.directory, self.name)
       exists = os.path.isfile('.merlin')
       self.assertTrue(exists, '.merlin was never created')
 

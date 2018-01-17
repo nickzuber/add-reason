@@ -1,6 +1,16 @@
 
 open Bindings;
 
+let rec execute = (steps, name, source, root) : bool => {
+  switch (steps) {
+    | [] => true;
+    | [step] => step(name, source, root);
+    | [step, ...rest] => step(name, source, root)
+      ? execute(rest, name, source, root)
+      : false;
+  }
+};
+
 module Path {
   /** Removes any leading and trailing slashes on the input path string.
    *  If you want to add a leading or trailing slash, do so manually after

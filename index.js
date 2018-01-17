@@ -10,6 +10,7 @@ const OutputPatcher = require('./src/patches').OutputPatcher;
 const rootDirectory = process.cwd();
 
 const handleSetup = commands.handleSetup();
+const handleLink = commands.handleLink();
 const VERSION = require('./src/config').VERSION;
 
 const unknownCommand = program => !program.args.map(arg => typeof arg).includes('object')
@@ -26,20 +27,23 @@ program.command('setup <directory> [package-name]')
     handleSetup(name, directory, rootDirectory, VERSION, program.linking);
   });
 
- program.command('link <package-name>')
+ program.command('link <directory> [package-name]')
   .description('create a symlink with the given package name')
-  .action((name, directory) => {});
+  .action((directory, name) => {
+    // given name or last source directory path name or simply `pkg`
+    name = name || directory.replace(/\/+$/, '').split('/').pop() || 'pkg';
+    handleLink(name, directory, rootDirectory, VERSION);
+  });
 
  program.command('rename <package-name>')
   .description('change the current Reason package name symlink')
-  .action((alias) => {});
+  .action((name) => {});
 
 program.command('unlink <package-name>')
   .description('removes the given symlink')
   .action((name) => {});
 
 OutputPatcher(program);
-
 program.parse(process.argv);
 
 // Set default command to --help

@@ -5,7 +5,7 @@ FLG -ppx /Users/nick/.nvm/versions/node/v7.10.1/lib/node_modules/bs-platform/lib
 S /Users/nick/projects/add-reason/node_modules/bs-platform/lib/ocaml
 B /Users/nick/projects/add-reason/node_modules/bs-platform/lib/ocaml
 FLG -nostdlib -no-alias-deps -color always
-FLG -w -30-40+6+7+27+32..39+44+45+101-26-27
+FLG -w -30-40+6+7+27+32..39+44+45+101-26-27-44
 S src/commands
 B lib/bs/src/commands
 ####BSB GENERATED: NO EDIT}
