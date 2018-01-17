@@ -4,8 +4,6 @@
 
 This is an easy to use [cli tool](https://en.wikipedia.org/wiki/Command-line_interface) that helps you seamlessly interop [ReasonML](https://reasonml.github.io/) code with an existing JavaScript project. You tell us where your ReasonML code is, and we'll handle the rest!
 
-<img src="public/sample.png" />
-
 ## How To Use
 
 ```

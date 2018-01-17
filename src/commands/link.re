@@ -1,7 +1,5 @@
-
 open Utils;
 open Bindings;
-
 
 /**
  * Create a symlink in the local node modules directory that points to the

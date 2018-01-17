@@ -11,6 +11,8 @@ const rootDirectory = process.cwd();
 
 const handleSetup = commands.handleSetup();
 const handleLink = commands.handleLink();
+const handleConfig = commands.handleConfig();
+const handleLinter = commands.handleLinter();
 const VERSION = require('./src/config').VERSION;
 
 const unknownCommand = program => !program.args.map(arg => typeof arg).includes('object')
@@ -33,6 +35,18 @@ program.command('setup <directory> [package-name]')
     // given name or last source directory path name or simply `pkg`
     name = name || directory.replace(/\/+$/, '').split('/').pop() || 'pkg';
     handleLink(name, directory, rootDirectory, VERSION);
+  });
+
+ program.command('linter <directory>')
+  .description('create a merlin file for linting your ReasonML code')
+  .action(directory => {
+    handleLinter(directory, rootDirectory, VERSION);
+  });
+
+ program.command('config <directory>')
+  .description('create a bsconfig file for building your ReasonML code')
+  .action(directory => {
+    handleConfig(directory, rootDirectory, VERSION);
   });
 
  program.command('rename <package-name>')
