@@ -1,4 +1,6 @@
-<img width="200" src="public/header.png" alt="add-reason" /> <a href="#"><img src="https://travis-ci.org/nickzuber/add-reason.svg?branch=master" /></a> <a href="#"><img src="https://img.shields.io/badge/project-active-brightgreen.svg" /></a> <a href="#"><img src="https://img.shields.io/badge/released-no-red.svg" /></a> <a href="#"><img src="https://img.shields.io/badge/license-MIT%20Licence-blue.svg" /></a>
+<img width="400" align="center" src="public/header.png" alt="add-reason" />
+
+<a href="#"><img src="https://travis-ci.org/nickzuber/add-reason.svg?branch=master" /></a> <a href="#"><img src="https://img.shields.io/badge/project-active-brightgreen.svg" /></a> <a href="#"><img src="https://img.shields.io/badge/released-no-red.svg" /></a> <a href="#"><img src="https://img.shields.io/badge/license-MIT%20Licence-blue.svg" /></a>
 
 > Simple tool for seamlessly integrating ReasonML into your existing JavaScript projects.
 
