@@ -11,10 +11,12 @@ Usage: add-reason [command] [options]
 
   Commands:
 
-    init <directory> [package-name]  set up Reason directory, config files, and symlink
-    link <package-name> <directory>  create a symlink with the given package name
-    rename <new-alias>               change the current Reason package name
-    unlink <package-name>            removes the given symlink
+    setup <directory> [package-name]  set up Reason directory, config files, and symlink
+    link <directory> [package-name]   create a symlink with the given package name
+    linter <directory>                create a merlin file for linting your ReasonML code
+    config <directory>                create a bsconfig file for building your ReasonML code
+    rename <package-name>             change the current Reason package name symlink
+    unlink <package-name>             removes the given symlink
 
   Options:
 
