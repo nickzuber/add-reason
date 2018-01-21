@@ -6,15 +6,15 @@ open Bindings;
  * we attempt to create the target directory too. If it already exists, then nothing
  * happens with it.
  */
-let prepareTargetDirectory = (name, source, root) : bool => {
+let prepareTargetDirectory = (name, source, root) : (bool, option(string)) => {
   paint("looking for source directory");
   let sourcePath = Path.combinePaths([root, source]);
   let outputPath = Path.combinePaths([root, "lib", "js", source]);
   if (Fs.safeFileExists(sourcePath)) {
     paint("creating target directory");
-    Fs.safeCreateDirectory(outputPath);
+    (Fs.safeCreateDirectory(outputPath), None);
   } else {
-    false;
+    (false, None);
   }
 };
 
@@ -34,7 +34,7 @@ let main = (name, source, root, version, linking) : unit => {
       Config.createBuildingConfig,
       Linter.createLintingConfig ]
   };
-  let finishWithFailure = Utils.execute(stepsAsFunctions, name, source, root);
+  let (finishWithFailure, comments) = Utils.execute(stepsAsFunctions, name, source, root);
   finishWithFailure ? success() : ();
-  stdout("\n")
+  Utils.printList(comments)
 }

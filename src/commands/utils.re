@@ -1,13 +1,30 @@
-
 open Bindings;
 
-let rec execute = (steps, name, source, root) : bool => {
-  switch (steps) {
-    | [] => true;
-    | [step] => step(name, source, root);
-    | [step, ...rest] => step(name, source, root)
-      ? execute(rest, name, source, root)
-      : false;
+let execute = (steps, name, source, root) : (bool, list(string)) => {
+  let rec process = (steps, feedback) => {
+    switch (steps) {
+      | [] => (true, feedback);
+      | [step] => switch (step(name, source, root)) {
+          | (success, Some(response)) => (success, [response, ...feedback]);
+          | (success, None) => (success, feedback);
+        }
+      | [step, ...rest] => switch (step(name, source, root)) {
+          | (true, Some(response)) => process(rest, [response, ...feedback]);
+          | (true, None) => process(rest, feedback);
+          | (false, Some(response)) => (false, [response, ...feedback]);
+          | (false, None) => (false, feedback);
+        }
+    }
+  };
+  process(steps, []);
+};
+
+let rec printList = messages : unit => {
+  switch (messages) {
+    | [] => ();
+    | [message] => stdout("\n" ++ barEnd ++ message);
+    | [message, ...rest] => stdout("\n" ++ bar ++ message);
+      printList(rest);
   }
 };
 

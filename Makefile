@@ -15,6 +15,14 @@ test:
 	$(call print_msg, Running tests... )
 	nosetests ./tests
 
+try:
+	make build
+	@echo "\n"
+	cd ./tests/root_for_testing; \
+		add-reason setup src/myCode
+	@echo "\n"
+	make reset-mock
+
 clean:
 	$(call print_msg, Cleaning... )
 	make reset-mock
@@ -28,4 +36,4 @@ reset-mock:
 	touch ./tests/root_for_testing/node_modules/persist.lock
 	cp ./tests/root_for_testing/package.empty_scripts.json ./tests/root_for_testing/package.json
 
-.PHONY: all build watch test clean reset-mock
+.PHONY: all build watch test try clean reset-mock

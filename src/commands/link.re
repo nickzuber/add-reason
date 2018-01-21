@@ -5,7 +5,7 @@ open Bindings;
  * Create a symlink in the local node modules directory that points to the
  * transpiled ReasonML code.
  */
-let performLinking = (name, source, root) : bool => {
+let performLinking = (name, source, root) : (bool, option(string)) => {
   paint("seeing if we can make a symlink");
   let nodeModulesPath = Path.combinePaths([root, "node_modules"]);
   let symlinkPath = Path.combinePaths([root, "node_modules", name]);
@@ -17,18 +17,17 @@ let performLinking = (name, source, root) : bool => {
   };
   /* Namespace already exists in node_modules, we complain and stop setup */
   if (Fs.safeFileExists(symlinkPath)) {
-    failure("file with the name \"" ++ name ++ "\" already exists in your \
-      node_modules, so we cannot create a symlink here.");
-    false;
+    failure();
+    (false, Some(bold(name) ++ " already exists in your "++ bold("node_modules") ++", so we can't create a symlink"));
   } else {
     paint("making symlink to output directory");
     Fs.safeCreateSymlink(outputPath, symlinkPath)
-      ? true
-      : { failure("something went wrong when creating the symlink"); false }
+      ? (true, None)
+      : { failure(); (false, Some("something went wrong when creating the symlink")) }
   }
 };
 
-let createPostinstall = (name, source, root) : bool => {
+let createPostinstall = (name, source, root) : (bool, option(string)) => {
   paint("preparing to add a postinstall script");
   let packagePath = Path.combinePaths([root, "package.json"]);
   /* We use relative paths here specifically for the postinstall script */
@@ -37,7 +36,7 @@ let createPostinstall = (name, source, root) : bool => {
   let command = Printf.sprintf("node -e \"var s='%s',d='%s',fs=require('fs');\
     if(fs.existsSync(d)===false){fs.symlinkSync(s,d,'dir')};\"", source, dest);
   paint("adding the postinstall script to your package file");
-  appendToPackageScripts(packagePath, command);
+  (appendToPackageScripts(packagePath, command), None)
 };
 
 let main = (name, source, root, version) : unit => {
@@ -49,7 +48,7 @@ let main = (name, source, root, version) : unit => {
     performLinking,
     createPostinstall
   ];
-  let finishWithFailure = Utils.execute(stepsAsFunctions, name, source, root);
+  let (finishWithFailure, comments) = Utils.execute(stepsAsFunctions, name, source, root);
   finishWithFailure ? success() : ();
-  stdout("\n")
+  Utils.printList(comments)
 }

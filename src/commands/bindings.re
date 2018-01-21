@@ -37,9 +37,9 @@ external blueBright : string => string = "";
 external getEmojiNative : string => string = "get";
 
 let emoji = (emoji) => getEmojiNative(emoji) ++ "  ";
-let altCodeDirectionalNonTerminal = [%bs.raw{| "├─ " |}];
-let altCodeDirectional = [%bs.raw{| "└─ " |}];
-let altLong = [%bs.raw{| "│" |}];
+let bar = [%bs.raw{| "├─ " |}];
+let barEnd = [%bs.raw{| "└─ " |}];
+let barLong = [%bs.raw{| "│" |}];
 
 [@bs.module]
 external camelCase : string => string = "lodash.camelcase";
@@ -101,13 +101,13 @@ let paint = (~blockThread=true, arg) => {
     stdout(parts[i] ++ " " ++ arg);
   };
 };
-let success = (arg) => {
+let success = () => {
   flush();
   stdout(emoji("sparkles") ++ green("done"));
 };
-let failure = (arg) => {
+let failure = () => {
   flush();
-  stdout(red("failed: ") ++ arg);
+  stdout(emoji("x") ++ red("failure"));
 };
 
 /** Path and Fs */
