@@ -20,7 +20,6 @@ try:
 	@echo "\n"
 	cd ./tests/root_for_testing; \
 		add-reason setup src/myCode
-	@echo "\n"
 	make reset-mock
 
 clean:

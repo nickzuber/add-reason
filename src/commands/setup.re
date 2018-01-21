@@ -14,7 +14,7 @@ let prepareTargetDirectory = (name, source, root) : (bool, option(string)) => {
     paint("creating target directory");
     (Fs.safeCreateDirectory(outputPath), None);
   } else {
-    (false, None);
+    (false, Some("couldn't find " ++ bold(source) ++ ", do you have a typo?"));
   }
 };
 
@@ -35,6 +35,6 @@ let main = (name, source, root, version, linking) : unit => {
       Linter.createLintingConfig ]
   };
   let (finishWithFailure, comments) = Utils.execute(stepsAsFunctions, name, source, root);
-  finishWithFailure ? success() : ();
+  finishWithFailure ? success() : failure();
   Utils.printList(comments)
 }

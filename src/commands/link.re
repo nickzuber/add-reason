@@ -17,13 +17,13 @@ let performLinking = (name, source, root) : (bool, option(string)) => {
   };
   /* Namespace already exists in node_modules, we complain and stop setup */
   if (Fs.safeFileExists(symlinkPath)) {
-    failure();
-    (false, Some(bold(name) ++ " already exists in your "++ bold("node_modules") ++", so we can't create a symlink"));
+    (false, Some(Printf.sprintf("%s already exists in your %s, so we can't create a symlink",
+      bold(name), bold("node_modules"))));
   } else {
     paint("making symlink to output directory");
     Fs.safeCreateSymlink(outputPath, symlinkPath)
-      ? (true, None)
-      : { failure(); (false, Some("something went wrong when creating the symlink")) }
+      ? (true, Some("import your reason code with " ++ yellow("require('" ++ name ++ "');")))
+      : (false, Some("something went wrong when creating the symlink"))
   }
 };
 
@@ -49,6 +49,6 @@ let main = (name, source, root, version) : unit => {
     createPostinstall
   ];
   let (finishWithFailure, comments) = Utils.execute(stepsAsFunctions, name, source, root);
-  finishWithFailure ? success() : ();
+  finishWithFailure ? success() : failure();
   Utils.printList(comments)
 }

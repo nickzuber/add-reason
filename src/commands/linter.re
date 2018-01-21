@@ -26,6 +26,6 @@ let main = (source, root, version) : unit => {
     createLintingConfig
   ];
   let (finishWithFailure, comments) = Utils.execute(stepsAsFunctions, (), source, root);
-  finishWithFailure ? success() : ();
+  finishWithFailure ? success() : failure();
   Utils.printList(comments)
 }

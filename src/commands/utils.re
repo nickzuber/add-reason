@@ -21,8 +21,8 @@ let execute = (steps, name, source, root) : (bool, list(string)) => {
 
 let rec printList = messages : unit => {
   switch (messages) {
-    | [] => ();
-    | [message] => stdout("\n" ++ barEnd ++ message);
+    | [] => stdout("\n");
+    | [message] => stdout("\n" ++ barEnd ++ message ++ "\n\n");
     | [message, ...rest] => stdout("\n" ++ bar ++ message);
       printList(rest);
   }

@@ -27,6 +27,6 @@ let main = (source, root, version) : unit => {
     createBuildingConfig
   ];
   let (finishWithFailure, comments) = Utils.execute(stepsAsFunctions, (), source, root);
-  finishWithFailure ? success() : ();
+  finishWithFailure ? success() : failure();
   Utils.printList(comments)
 }
