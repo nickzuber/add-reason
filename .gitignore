@@ -1,5 +1,6 @@
 *.pyc
 .DS_Store
+.bsb.lock
 npm-debug.log
 /lib/bs/
 /node_modules/
