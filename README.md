@@ -10,7 +10,7 @@ This is an easy to use [cli tool](https://en.wikipedia.org/wiki/Command-line_int
 ## Installation
 
 ```
-$ npm i add-reason -g
+$ npm install -g add-reason
 ```
 or
 ```
@@ -28,8 +28,6 @@ Usage: add-reason [command] [options]
     link <directory> [package-name]   create a symlink with the given package name
     linter <directory>                create a merlin file for linting your ReasonML code
     config <directory>                create a bsconfig file for building your ReasonML code
-    rename <package-name>             change the current Reason package name symlink
-    unlink <package-name>             removes the given symlink
 
   Options:
 
@@ -45,3 +43,7 @@ Usage: add-reason [command] [options]
 ## FAQ
 
 > coming soon™
+
+## License
+
+This software is free to use under the MIT License. See [this reference](https://opensource.org/licenses/MIT) for license text and copyright information.
