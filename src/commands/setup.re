@@ -36,5 +36,7 @@ let main = (name, source, root, version, linking) : unit => {
   };
   let (finishWithFailure, comments) = Utils.execute(stepsAsFunctions, name, source, root);
   finishWithFailure ? success() : failure();
-  Utils.printList(comments)
+  Utils.printList(comments);
+  let count = Utils.deriveSourceDirectory(root);
+  stdout(string_of_int(count));
 }

@@ -115,8 +115,20 @@ const flush = () => {
   }
 };
 
+const isDirectory = name => {
+  try {
+    return fs.lstatSync(name).isDirectory();
+  } catch (e) {
+    return false;
+  }
+};
+
+const test = (s) => ["a", "b", "c", "d", "e", "f"]
+
 module.exports.OutputPatcher = OutputPatcher;
 module.exports.editPackageScripts = editPackageScripts;
 module.exports.generateConfigContents = generateConfigContents;
 module.exports.generateMerlinContents = generateMerlinContents;
 module.exports.flush = flush;
+module.exports.isDirectory = isDirectory;
+module.exports.test = test;

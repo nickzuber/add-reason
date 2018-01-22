@@ -57,6 +57,9 @@ external generateMerlinContents : (string, string) => string = "";
 [@bs.val] [@bs.module "../../../../src/patches"]
 external flush : unit => unit = "";
 
+[@bs.val] [@bs.module "../../../../src/patches"]
+external safeIsDirectory : string => bool = "isDirectory";
+
 /** Processes and Globals */
 [@bs.val]
 external stdout : string => unit = "process.stdout.write";
@@ -119,6 +122,9 @@ external throwIfFileDNE : string => bool = "lstatSync";
 
 [@bs.val] [@bs.module "fs"]
 external createAndWriteToFile : (string, string) => unit = "writeFileSync";
+
+[@bs.val] [@bs.module "fs"]
+external readDir : string => list(string) = "readdirSync";
 
 [@bs.val] [@bs.module "fs-extra"]
 external createDirectory : (string) => unit = "ensureDirSync";

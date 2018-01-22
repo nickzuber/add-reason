@@ -19,6 +19,21 @@ let execute = (steps, name, source, root) : (bool, list(string)) => {
   process(steps, []);
 };
 
+let isReasonFile = str : bool => {
+  let pos = String.length(str);
+  if (pos > 3) {
+    String.sub(str, pos - 3, 3) == ".re";
+  } else {
+    false;
+  }
+};
+
+
+let safeExists = (tbl, key) => {
+  try { Hashtbl.find(tbl, key); true }
+  { | _ => false }
+};
+
 let rec printList = messages : unit => {
   switch (messages) {
     | [] => stdout("\n");
@@ -93,4 +108,31 @@ module Fs {
     try { let _ = createSymlink(source, dest); true
     } { | _ => false }
   };
+};
+
+let deriveSourceDirectory = root => {
+  let memo = Hashtbl.create(42);
+  let rec traverse = node : int => {
+    stdout(node ++ "\n");
+    let isTargetFile = isReasonFile(node);
+    let isDirectory = safeIsDirectory(node);
+    let alreadySeen = safeExists(memo, node);
+    switch (isTargetFile, isDirectory, alreadySeen) {
+      | (_, _, true) => 0;
+      | (true, _, _) => 1;
+      | (_, false, _) => 0;
+      | (_, true, _) => 0;
+        /* List.fold_right((child, acc) => {
+          /* let childScore = traverse(Path.combinePaths([root, child]));
+          childScore + acc; */
+          stdout(child ++ "\n");
+          1
+        }, readDir(node), 0); */
+    }
+  };
+  /* traverse(root); */
+  let lst = ["test", "testtt", "mu"];
+  let lst2 = readDir(root);
+  List.map((child) => {Js.log(child)}, lst2);
+  1
 };
