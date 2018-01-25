@@ -83,7 +83,7 @@ external random : unit => float = "";
 external floor : float => int = "";
 
 let paint = (~blockThread=true, arg) => {
-  let parts = [|
+  /* let parts = [|
     {j|⠋|j},
     {j|⠙|j},
     {j|⠹|j},
@@ -94,9 +94,15 @@ let paint = (~blockThread=true, arg) => {
     {j|⠧|j},
     {j|⠇|j},
     {j|⠏|j},
+  |]; */
+  let parts = [|
+    {j|◜|j},
+    {j|◝|j},
+    {j|◟|j},
+    {j|◞|j},
   |];
   for (i in 0 to Array.length(parts) - 1) {
-    blockThread ? sleep(15) : ();
+    blockThread ? sleep(50) : ();
     flush();
     stdout(parts[i] ++ " " ++ arg);
   };
