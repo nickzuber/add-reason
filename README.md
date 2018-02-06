@@ -104,9 +104,7 @@ Then we just create that symlink  that hooks in your compiled ReasonML code to y
 
 ## FAQ
 
-#### I ran `setup` and everything worked fine, but when I try to import my code I get `Error: Cannot find module`
-
----
+> #### I ran `setup` and everything worked fine, but when I try to import my code I get `Error: Cannot find module`
 
 This is almost always because your ReasonML directory doesn't have an `index.re` file. Normally, this isn't a necessary thing, but if you want to be able to write
 
@@ -122,9 +120,7 @@ const reasonCode = require('reasonCode/file1.js');
 // ...
 ```
 
-#### I ran `setup` but my code isn't compiled!
-
----
+> #### I ran `setup` but my code isn't compiled!
 
 `add-reason` doesn't actually compile your code or deal with that bit. You still need to make sure you're compiling your code yourself with BuckleScript something like
 
