@@ -47,6 +47,12 @@ You'd simply go to your project root and type:
 $ add-reason setup ./reasonCode
 ```
 
+or, since `setup` is the deault command, you can even write
+
+```
+$ add-reason ./reasonCode
+```
+
 and that's it! Now you can import your compiled ReasonML code with
 
 ```js
