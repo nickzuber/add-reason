@@ -4,7 +4,8 @@
 
 const path = require('path');
 const program = require('commander');
-const camelcase = require('lodash.camelcase');
+const chalk = require('chalk');
+const getDistance = require('levenshtein-lite');
 const commands = require('commands');
 const OutputPatcher = require('./src/patches').OutputPatcher;
 const rootDirectory = process.cwd();
@@ -67,8 +68,22 @@ if (!process.argv.slice(2).length) {
 }
 
 if (unknownCommand(program)) {
-  const directory = program.args[0];
-  const name = program.args[1] || directory.replace(/\/+$/, '').split('/').pop() || 'pkg';
-  handleSetup(name, directory, rootDirectory, VERSION, program.linking);
+  const unknownCommand = program.args[0];
+  const possibleCommands = program.commands.reduce((acc, cmd) => {
+    const name = cmd._name;
+    if (getDistance(name, unknownCommand) < 3) {
+      acc.push(name);
+    }
+    return acc;
+  }, []);
+  if (possibleCommands.length > 0) {
+    process.stdout.write(`\n  Unknown command ${chalk.bold(unknownCommand)}. Did you mean to do any of these?\n\n`);
+    possibleCommands.map(name => process.stdout.write(`    ${name}\n`))
+    process.stdout.write('\n');
+  } else {
+    const directory = program.args[0];
+    const name = program.args[1] || directory.replace(/\/+$/, '').split('/').pop() || 'pkg';
+    handleSetup(name, directory, rootDirectory, VERSION, program.linking);
+  }
   process.exit(0);
 }

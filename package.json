@@ -16,6 +16,7 @@
     "fs-extra": "^5.0.0",
     "json-format": "^1.0.1",
     "jsonfile": "^4.0.0",
+    "levenshtein-lite": "^1.0.9",
     "lodash.camelcase": "^4.3.0",
     "node-emoji": "^1.8.1"
   },

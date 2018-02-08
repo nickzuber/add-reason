@@ -70,6 +70,10 @@ jsonfile@^4.0.0:
   optionalDependencies:
     graceful-fs "^4.1.6"
 
+levenshtein-lite@^1.0.9:
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/levenshtein-lite/-/levenshtein-lite-1.0.9.tgz#fb9f6fe7bacc95a0f20da2d2281bfb04c82dda37"
+
 lodash.camelcase@^4.3.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/lodash.camelcase/-/lodash.camelcase-4.3.0.tgz#b28aa6288a2b9fc651035c7711f65ab6190331a6"
