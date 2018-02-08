@@ -50,14 +50,6 @@ program.command('setup <directory> [package-name]')
     handleConfig(directory, rootDirectory, VERSION);
   });
 
- program.command('rename <package-name>')
-  .description('change the current Reason package name symlink')
-  .action((name) => {});
-
-program.command('unlink <package-name>')
-  .description('removes the given symlink')
-  .action((name) => {});
-
 OutputPatcher(program);
 program.parse(process.argv);
 
