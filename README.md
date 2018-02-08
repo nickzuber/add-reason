@@ -47,7 +47,7 @@ You'd simply go to your project root and type:
 $ add-reason setup ./reasonCode
 ```
 
-or, since `setup` is the deault command, you can even write
+or, since `setup` is the default command, you can even write
 
 ```
 $ add-reason ./reasonCode
