@@ -24,7 +24,8 @@
     "bs-platform": "2.1.0"
   },
   "scripts": {
-    "test": "make test"
+    "test": "make test",
+    "postinstall": "node -e \"var s='../lib/js/./src/commands',d='./node_modules/commands',fs=require('fs');if(fs.existsSync(d)===false){fs.symlinkSync(s,d,'dir')};\""
   },
   "repository": {
     "type": "git",
