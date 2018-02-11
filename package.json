@@ -18,9 +18,7 @@
     "jsonfile": "^4.0.0",
     "levenshtein-lite": "^1.0.9",
     "lodash.camelcase": "^4.3.0",
-    "node-emoji": "^1.8.1"
-  },
-  "devDependencies": {
+    "node-emoji": "^1.8.1",
     "bs-platform": "2.1.0"
   },
   "scripts": {
