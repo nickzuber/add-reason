@@ -45,16 +45,16 @@ let barLong = [%bs.raw{| "│" |}];
 external camelCase : string => string = "lodash.camelcase";
 
 /** Internal patches */
-[@bs.val] [@bs.module "../../../../src/patches"]
+[@bs.val] [@bs.module "../patches"]
 external appendToPackageScripts : (string, string) => bool = "editPackageScripts";
 
-[@bs.val] [@bs.module "../../../../src/patches"]
+[@bs.val] [@bs.module "../patches"]
 external generateConfigContents : (string, string) => string = "";
 
-[@bs.val] [@bs.module "../../../../src/patches"]
+[@bs.val] [@bs.module "../patches"]
 external generateMerlinContents : (string, string) => string = "";
 
-[@bs.val] [@bs.module "../../../../src/patches"]
+[@bs.val] [@bs.module "../patches"]
 external flush : unit => unit = "";
 
 /** Processes and Globals */

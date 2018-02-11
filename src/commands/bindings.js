@@ -2,9 +2,9 @@
 'use strict';
 
 var Chalk      = require("chalk");
+var Patches    = require("../patches");
 var Caml_array = require("bs-platform/lib/js/caml_array.js");
 var NodeEmoji  = require("node-emoji");
-var Patches    = require("../../../../src/patches");
 
 function emoji(emoji$1) {
   return NodeEmoji.get(emoji$1) + "  ";

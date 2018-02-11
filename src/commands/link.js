@@ -5,8 +5,8 @@ var Block                   = require("bs-platform/lib/js/block.js");
 var Curry                   = require("bs-platform/lib/js/curry.js");
 var Chalk                   = require("chalk");
 var Printf                  = require("bs-platform/lib/js/printf.js");
+var Patches                 = require("../patches");
 var Utils$ReasonTemplate    = require("./utils.js");
-var Patches                 = require("../../../../src/patches");
 var Bindings$ReasonTemplate = require("./bindings.js");
 
 function performLinking(name, source, root) {

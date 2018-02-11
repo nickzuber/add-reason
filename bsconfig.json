@@ -7,6 +7,10 @@
   "bs-dependencies" : [],
   "refmt": 3,
   "namespace": true,
+  "package-specs": [{
+    "module": "commonjs",
+    "in-source":  true
+  }],
   "warnings": {
     "number": "-26-27-44"  // Hide unused variable warning
   }

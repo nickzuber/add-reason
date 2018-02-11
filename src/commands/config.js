@@ -5,37 +5,37 @@ var Block                   = require("bs-platform/lib/js/block.js");
 var Curry                   = require("bs-platform/lib/js/curry.js");
 var Chalk                   = require("chalk");
 var Printf                  = require("bs-platform/lib/js/printf.js");
+var Patches                 = require("../patches");
 var Utils$ReasonTemplate    = require("./utils.js");
-var Patches                 = require("../../../../src/patches");
 var Bindings$ReasonTemplate = require("./bindings.js");
 
-function createLintingConfig(_, source, root) {
-  Bindings$ReasonTemplate.paint(/* None */0, "looking for linting config");
+function createBuildingConfig(_, source, root) {
+  Bindings$ReasonTemplate.paint(/* None */0, "looking for building config");
   var configPath = Utils$ReasonTemplate.Path[/* combinePaths */1](/* None */0, /* :: */[
         root,
         /* :: */[
-          ".merlin",
+          "bsconfig.json",
           /* [] */0
         ]
       ]);
-  var nodeModulesPath = Utils$ReasonTemplate.Path[/* combinePaths */1](/* None */0, /* :: */[
+  var packagePath = Utils$ReasonTemplate.Path[/* combinePaths */1](/* None */0, /* :: */[
         root,
         /* :: */[
-          "node_modules",
+          "package.json",
           /* [] */0
         ]
       ]);
-  var contents = Patches.generateMerlinContents(source, nodeModulesPath);
+  var contents = Patches.generateConfigContents(source, packagePath);
   if (Utils$ReasonTemplate.Fs[/* safeFileExists */0](configPath)) {
     return /* tuple */[
             /* true */1,
             /* None */0
           ];
   } else {
-    Bindings$ReasonTemplate.paint(/* None */0, "creating linting config");
+    Bindings$ReasonTemplate.paint(/* None */0, "creating building config");
     return /* tuple */[
             Utils$ReasonTemplate.Fs[/* safeCreateFile */2](configPath, contents),
-            /* Some */["created " + Chalk.yellow(".merlin")]
+            /* Some */["created " + Chalk.yellow("bsconfig.json")]
           ];
   }
 }
@@ -43,7 +43,7 @@ function createLintingConfig(_, source, root) {
 function main(source, root, version) {
   process.stdout.write(Chalk.bold(Chalk.white(Curry._1(Printf.sprintf(/* Format */[
                         /* String_literal */Block.__(11, [
-                            "add-reason linter v",
+                            "add-reason config v",
                             /* String */Block.__(2, [
                                 /* No_padding */0,
                                 /* Char_literal */Block.__(12, [
@@ -52,10 +52,10 @@ function main(source, root, version) {
                                   ])
                               ])
                           ]),
-                        "add-reason linter v%s\n"
+                        "add-reason config v%s\n"
                       ]), version))));
   var stepsAsFunctions = /* :: */[
-    createLintingConfig,
+    createBuildingConfig,
     /* [] */0
   ];
   var match = Utils$ReasonTemplate.execute(stepsAsFunctions, /* () */0, source, root);
@@ -67,6 +67,6 @@ function main(source, root, version) {
   return Utils$ReasonTemplate.printList(match[1]);
 }
 
-exports.createLintingConfig = createLintingConfig;
-exports.main                = main;
+exports.createBuildingConfig = createBuildingConfig;
+exports.main                 = main;
 /* chalk Not a pure module */
