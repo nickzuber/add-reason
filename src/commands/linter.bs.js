@@ -35,7 +35,7 @@ function createLintingConfig(_, source, root) {
     Bindings$ReasonTemplate.paint(/* None */0, "creating linting config");
     return /* tuple */[
             Utils$ReasonTemplate.Fs[/* safeCreateFile */2](configPath, contents),
-            /* Some */["created " + Chalk.bold(".merlin")]
+            /* Some */["created " + Utils$ReasonTemplate.highlightColor(".merlin")]
           ];
   }
 }

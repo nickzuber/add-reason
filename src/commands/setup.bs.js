@@ -42,7 +42,32 @@ function prepareTargetDirectory(_, source, root) {
   } else {
     return /* tuple */[
             /* false */0,
-            /* Some */["couldn't find " + (Chalk.bold(source) + ", do you have a typo?")]
+            /* Some */["couldn't find " + (Utils$ReasonTemplate.highlightColor(source) + ", do you have a typo?")]
+          ];
+  }
+}
+
+function checkForBucklescript(_, _$1, root) {
+  Bindings$ReasonTemplate.paint(/* None */0, "checking bs-platform has been linked or installed");
+  var bsPlatformPath = Utils$ReasonTemplate.Path[/* combinePaths */1](/* None */0, /* :: */[
+        root,
+        /* :: */[
+          "node_modules",
+          /* :: */[
+            "bs-platform",
+            /* [] */0
+          ]
+        ]
+      ]);
+  if (Utils$ReasonTemplate.Fs[/* safeFileExists */0](bsPlatformPath)) {
+    return /* tuple */[
+            /* true */1,
+            /* None */0
+          ];
+  } else {
+    return /* tuple */[
+            /* true */1,
+            /* Some */[Chalk.redBright("WARNING ") + ("couldn't find " + (Chalk.magenta("bs-platform") + (", make sure you it's installed globally & linked with " + Chalk.magenta("npm link bs-platform"))))]
           ];
   }
 }
@@ -73,7 +98,10 @@ function main(name, source, root, version, linking) {
               Link$ReasonTemplate.createBuildCommand,
               /* :: */[
                 Link$ReasonTemplate.createPostinstallCommand,
-                /* [] */0
+                /* :: */[
+                  checkForBucklescript,
+                  /* [] */0
+                ]
               ]
             ]
           ]
@@ -87,7 +115,10 @@ function main(name, source, root, version, linking) {
           Linter$ReasonTemplate.createLintingConfig,
           /* :: */[
             Link$ReasonTemplate.createBuildCommand,
-            /* [] */0
+            /* :: */[
+              checkForBucklescript,
+              /* [] */0
+            ]
           ]
         ]
       ]
@@ -102,5 +133,6 @@ function main(name, source, root, version, linking) {
 }
 
 exports.prepareTargetDirectory = prepareTargetDirectory;
+exports.checkForBucklescript   = checkForBucklescript;
 exports.main                   = main;
 /* chalk Not a pure module */

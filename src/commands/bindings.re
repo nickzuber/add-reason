@@ -1,52 +1,48 @@
-
-/** General */
-[@bs.val] [@bs.module "chalk"]
+/** General */ [@bs.val] [@bs.module "chalk"]
 external white : string => string = "";
 
-[@bs.val] [@bs.module "chalk"]
-external green : string => string = "";
+[@bs.val] [@bs.module "chalk"] external green : string => string = "";
 
-[@bs.val] [@bs.module "chalk"]
-external red : string => string = "";
+[@bs.val] [@bs.module "chalk"] external red : string => string = "";
 
-[@bs.val] [@bs.module "chalk"]
-external gray : string => string = "";
+[@bs.val] [@bs.module "chalk"] external gray : string => string = "";
 
-[@bs.val] [@bs.module "chalk"]
-external yellow : string => string = "";
+[@bs.val] [@bs.module "chalk"] external yellow : string => string = "";
 
-[@bs.val] [@bs.module "chalk"]
-external blue : string => string = "";
+[@bs.val] [@bs.module "chalk"] external blue : string => string = "";
 
-[@bs.val] [@bs.module "chalk"]
-external cyan : string => string = "";
+[@bs.val] [@bs.module "chalk"] external cyan : string => string = "";
 
-[@bs.val] [@bs.module "chalk"]
-external magenta : string => string = "";
+[@bs.val] [@bs.module "chalk"] external magenta : string => string = "";
 
-[@bs.val] [@bs.module "chalk"]
-external bold : string => string = "";
+[@bs.val] [@bs.module "chalk"] external bold : string => string = "";
 
-[@bs.val] [@bs.module "chalk"]
-external yellowBright : string => string = "";
+[@bs.val] [@bs.module "chalk"] external yellowBright : string => string = "";
 
-[@bs.val] [@bs.module "chalk"]
-external blueBright : string => string = "";
+[@bs.val] [@bs.module "chalk"] external greenBright : string => string = "";
+
+[@bs.val] [@bs.module "chalk"] external magentaBright : string => string = "";
+
+[@bs.val] [@bs.module "chalk"] external redBright : string => string = "";
+
+[@bs.val] [@bs.module "chalk"] external blueBright : string => string = "";
 
 [@bs.val] [@bs.module "node-emoji"]
 external getEmojiNative : string => string = "get";
 
-let emoji = (emoji) => getEmojiNative(emoji) ++ "  ";
-let bar = [%bs.raw{| "├─ " |}];
-let barEnd = [%bs.raw{| "└─ " |}];
-let barLong = [%bs.raw{| "│" |}];
+let emoji = emoji => getEmojiNative(emoji) ++ "  ";
 
-[@bs.module]
-external camelCase : string => string = "lodash.camelcase";
+let bar = [%bs.raw {| "├─ " |}];
 
-/** Internal patches */
-[@bs.val] [@bs.module "../patches"]
-external appendToPackageScripts : (string, string, string) => bool = "editPackageScripts";
+let barEnd = [%bs.raw {| "└─ " |}];
+
+let barLong = [%bs.raw {| "│" |}];
+
+[@bs.module] external camelCase : string => string = "lodash.camelcase";
+
+/** Internal patches */ [@bs.val] [@bs.module "../patches"]
+external appendToPackageScripts : (string, string, string) => bool =
+  "editPackageScripts";
 
 [@bs.val] [@bs.module "../patches"]
 external generateConfigContents : (string, string) => string = "";
@@ -54,15 +50,12 @@ external generateConfigContents : (string, string) => string = "";
 [@bs.val] [@bs.module "../patches"]
 external generateMerlinContents : (string, string) => string = "";
 
-[@bs.val] [@bs.module "../patches"]
-external flush : unit => unit = "";
+[@bs.val] [@bs.module "../patches"] external flush : unit => unit = "";
 
-/** Processes and Globals */
-[@bs.val]
+/** Processes and Globals */ [@bs.val]
 external stdout : string => unit = "process.stdout.write";
 
-[@bs.val] [@bs.scope "Date"]
-external now : unit => int = "";
+[@bs.val] [@bs.scope "Date"] external now : unit => int = "";
 
 /**
  * Hijacks the thread so we can slow things down and show what we're doing
@@ -76,48 +69,42 @@ let sleep = ms => {
   };
 };
 
-[@bs.val] [@bs.scope "Math"]
-external random : unit => float = "";
+[@bs.val] [@bs.scope "Math"] external random : unit => float = "";
 
-[@bs.val] [@bs.scope "Math"]
-external floor : float => int = "";
+[@bs.val] [@bs.scope "Math"] external floor : float => int = "";
 
 let paint = (~blockThread=true, arg) => {
   /* let parts = [|
-    {j|⠋|j},
-    {j|⠙|j},
-    {j|⠹|j},
-    {j|⠸|j},
-    {j|⠼|j},
-    {j|⠴|j},
-    {j|⠦|j},
-    {j|⠧|j},
-    {j|⠇|j},
-    {j|⠏|j},
-  |]; */
-  let parts = [|
-    {j|◜|j},
-    {j|◝|j},
-    {j|◟|j},
-    {j|◞|j},
-  |];
+       {j|⠋|j},
+       {j|⠙|j},
+       {j|⠹|j},
+       {j|⠸|j},
+       {j|⠼|j},
+       {j|⠴|j},
+       {j|⠦|j},
+       {j|⠧|j},
+       {j|⠇|j},
+       {j|⠏|j},
+     |]; */
+  let parts = [|{j|◜|j}, {j|◝|j}, {j|◟|j}, {j|◞|j}|];
   for (i in 0 to Array.length(parts) - 1) {
     blockThread ? sleep(50) : ();
     flush();
     stdout(parts[i] ++ " " ++ arg);
   };
 };
+
 let success = () => {
   flush();
   stdout(emoji("sparkles") ++ green("done"));
 };
+
 let failure = () => {
   flush();
-  stdout(emoji("x") ++ red("failure"));
+  stdout(emoji("no_entry_sign") ++ red("failure"));
 };
 
-/** Path and Fs */
-[@bs.val] [@bs.module "fs"]
+/** Path and Fs */ [@bs.val] [@bs.module "fs"]
 external createSymlink : (string, string) => unit = "symlinkSync";
 
 [@bs.val] [@bs.module "fs"]
@@ -127,7 +114,6 @@ external throwIfFileDNE : string => bool = "lstatSync";
 external createAndWriteToFile : (string, string) => unit = "writeFileSync";
 
 [@bs.val] [@bs.module "fs-extra"]
-external createDirectory : (string) => unit = "ensureDirSync";
+external createDirectory : string => unit = "ensureDirSync";
 
-[@bs.val] [@bs.module "path"]
-external sep : string = "";
+[@bs.val] [@bs.module "path"] external sep : string = "";

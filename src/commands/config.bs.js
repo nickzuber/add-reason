@@ -35,7 +35,7 @@ function createBuildingConfig(_, source, root) {
     Bindings$ReasonTemplate.paint(/* None */0, "creating building config");
     return /* tuple */[
             Utils$ReasonTemplate.Fs[/* safeCreateFile */2](configPath, contents),
-            /* Some */["created " + Chalk.bold("bsconfig.json")]
+            /* Some */["created " + Utils$ReasonTemplate.highlightColor("bsconfig.json")]
           ];
   }
 }

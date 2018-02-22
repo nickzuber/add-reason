@@ -62,7 +62,7 @@ function performLinking(name, source, root) {
                               ])
                           ]),
                         "%s already exists in your %s, so we can't create a symlink"
-                      ]), Chalk.bold(name), Chalk.bold("node_modules"))]
+                      ]), Utils$ReasonTemplate.highlightColor(name), Utils$ReasonTemplate.highlightColor("node_modules"))]
           ];
   } else {
     Bindings$ReasonTemplate.paint(/* None */0, "making symlink to output directory");
@@ -70,7 +70,7 @@ function performLinking(name, source, root) {
     if (match !== 0) {
       return /* tuple */[
               /* true */1,
-              /* Some */["import your reason code with " + Chalk.bold("require('" + (name + "');"))]
+              /* Some */["import your reason code with " + Utils$ReasonTemplate.highlightColor("require('" + (name + "');"))]
             ];
     } else {
       return /* tuple */[
@@ -115,7 +115,7 @@ function createBuildCommand(name, source, root) {
       ]);
   return /* tuple */[
           +Patches.editPackageScripts("build-reason", packagePath, "bsb -make-world"),
-          /* Some */["Added a " + (Chalk.bold("build-reason") + " command")]
+          /* Some */["Added a " + (Utils$ReasonTemplate.highlightColor("build-reason") + " command")]
         ];
 }
 
@@ -173,7 +173,7 @@ function createPostinstallCommand(name, source, root) {
   Bindings$ReasonTemplate.paint(/* None */0, "adding the postinstall script to your package file");
   return /* tuple */[
           +Patches.editPackageScripts("postinstall", packagePath, command),
-          /* Some */["Added a " + (Chalk.bold("postinstall") + " command")]
+          /* Some */["Added a " + (Utils$ReasonTemplate.highlightColor("postinstall") + " command")]
         ];
 }
 

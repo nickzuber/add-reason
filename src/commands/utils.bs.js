@@ -2,11 +2,17 @@
 'use strict';
 
 var Fs                      = require("fs");
+var List                    = require("bs-platform/lib/js/list.js");
 var Path                    = require("path");
 var Curry                   = require("bs-platform/lib/js/curry.js");
+var Chalk                   = require("chalk");
 var $$String                = require("bs-platform/lib/js/string.js");
 var FsExtra                 = require("fs-extra");
 var Bindings$ReasonTemplate = require("./bindings.bs.js");
+
+function highlightColor(prim) {
+  return Chalk.bold(prim);
+}
 
 function execute(steps, name, source, root) {
   var _steps = steps;
@@ -79,12 +85,14 @@ function execute(steps, name, source, root) {
   };
 }
 
-function printList(_messages) {
+function printList(messages) {
+  var revMessages = List.rev(messages);
+  var _messages = revMessages;
   while(true) {
-    var messages = _messages;
-    if (messages) {
-      var rest = messages[1];
-      var message = messages[0];
+    var messages$1 = _messages;
+    if (messages$1) {
+      var rest = messages$1[1];
+      var message = messages$1[0];
       if (rest) {
         process.stdout.write("\n" + (Bindings$ReasonTemplate.bar + message));
         _messages = rest;
@@ -206,8 +214,9 @@ var Fs$1 = /* module */[
   /* safeCreateSymlink */safeCreateSymlink
 ];
 
-exports.execute   = execute;
-exports.printList = printList;
-exports.Path      = Path$1;
-exports.Fs        = Fs$1;
+exports.highlightColor = highlightColor;
+exports.execute        = execute;
+exports.printList      = printList;
+exports.Path           = Path$1;
+exports.Fs             = Fs$1;
 /* fs Not a pure module */
