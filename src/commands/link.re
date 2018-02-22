@@ -22,12 +22,21 @@ let performLinking = (name, source, root) : (bool, option(string)) => {
   } else {
     paint("making symlink to output directory");
     Fs.safeCreateSymlink(outputPath, symlinkPath)
-      ? (true, Some("import your reason code with " ++ yellow("require('" ++ name ++ "');")))
+      ? (true, Some("import your reason code with " ++ bold("require('" ++ name ++ "');")))
       : (false, Some("something went wrong when creating the symlink"))
   }
 };
 
-let createPostinstall = (name, source, root) : (bool, option(string)) => {
+let createBuildCommand = (name, source, root) : (bool, option(string)) => {
+  paint("preparing to add a build command");
+  let packagePath = Path.combinePaths([root, "package.json"]);
+  /* We use relative paths here specifically for the postinstall script */
+  let source = Path.combinePaths(["..", "lib", "js", source], ~useLeadingSlash=false);
+  let dest = Path.combinePaths([".", "node_modules", name], ~useLeadingSlash=false);
+  (appendToPackageScripts("build-reason", packagePath, "bsb -make-world"), Some("Added a " ++ bold("build-reason") ++ " command"))
+};
+
+let createPostinstallCommand = (name, source, root) : (bool, option(string)) => {
   paint("preparing to add a postinstall script");
   let packagePath = Path.combinePaths([root, "package.json"]);
   /* We use relative paths here specifically for the postinstall script */
@@ -36,7 +45,7 @@ let createPostinstall = (name, source, root) : (bool, option(string)) => {
   let command = Printf.sprintf("node -e \"var s='%s',d='%s',fs=require('fs');\
     if(fs.existsSync(d)===false){fs.symlinkSync(s,d,'dir')};\"", source, dest);
   paint("adding the postinstall script to your package file");
-  (appendToPackageScripts(packagePath, command), None)
+  (appendToPackageScripts("postinstall", packagePath, command), Some("Added a " ++ bold("postinstall") ++ " command"))
 };
 
 let main = (name, source, root, version) : unit => {
@@ -46,7 +55,8 @@ let main = (name, source, root, version) : unit => {
     |> stdout;
   let stepsAsFunctions = [
     performLinking,
-    createPostinstall
+    createBuildCommand,
+    createPostinstallCommand
   ];
   let (finishWithFailure, comments) = Utils.execute(stepsAsFunctions, name, source, root);
   finishWithFailure ? success() : failure();

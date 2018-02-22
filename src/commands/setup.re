@@ -28,11 +28,13 @@ let main = (name, source, root, version, linking) : unit => {
       Config.createBuildingConfig,
       Linter.createLintingConfig,
       Link.performLinking,
-      Link.createPostinstall ]
+      Link.createBuildCommand,
+      Link.createPostinstallCommand ]
   } else {
     [ prepareTargetDirectory,
       Config.createBuildingConfig,
-      Linter.createLintingConfig ]
+      Linter.createLintingConfig,
+      Link.createBuildCommand ]
   };
   let (finishWithFailure, comments) = Utils.execute(stepsAsFunctions, name, source, root);
   finishWithFailure ? success() : failure();

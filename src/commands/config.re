@@ -12,7 +12,7 @@ let createBuildingConfig = (_name, source, root) : (bool, option(string)) => {
   let contents = generateConfigContents(source, packagePath);
   if (!Fs.safeFileExists(configPath)) {
     paint("creating building config");
-    (Fs.safeCreateFile(configPath, contents), Some("created " ++ yellow("bsconfig.json")));
+    (Fs.safeCreateFile(configPath, contents), Some("created " ++ bold("bsconfig.json")));
   } else {
     (true, None);
   }

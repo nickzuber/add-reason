@@ -11,6 +11,7 @@
     "module": "commonjs",
     "in-source":  true
   }],
+  "suffix": ".bs.js",
   "warnings": {
     "number": "-26-27-44"  // Hide unused variable warning
   }

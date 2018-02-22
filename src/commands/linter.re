@@ -11,7 +11,7 @@ let createLintingConfig = (_name, source, root) : (bool, option(string)) => {
   let contents = generateMerlinContents(source, nodeModulesPath);
   if (!Fs.safeFileExists(configPath)) {
     paint("creating linting config");
-    (Fs.safeCreateFile(configPath, contents), Some("created " ++ yellow(".merlin")));
+    (Fs.safeCreateFile(configPath, contents), Some("created " ++ bold(".merlin")));
   } else {
     (true, None);
   }

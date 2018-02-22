@@ -26,7 +26,7 @@ const OutputPatcher = (commander) => {
  * @param {string} command The command to add to the `scripts` key.
  * @return {void} The success of the operations.
  */
-const editPackageScripts = (file, command) => {
+const editPackageScripts = (key, file, command) => {
   const config = {
     type: 'space',
     size: 2
@@ -36,18 +36,18 @@ const editPackageScripts = (file, command) => {
     // No existing scripts
     if (!contents.scripts) {
       contents.scripts = {
-        postinstall: command
+        [key]: command
       };
     }
     // Already are some scripts
     else {
-      // Already is a postinstall script
-      if (contents.scripts.postinstall) {
+      // Already is a script defined with `key`
+      if (contents.scripts[key]) {
         // Make sure we don't add this command more than once if it already exists
-        if (contents.scripts.postinstall.indexOf(command) > -1) return true;
-        command = `${contents.scripts.postinstall} && ${command}`;
+        if (contents.scripts[key].indexOf(command) > -1) return true;
+        command = `${contents.scripts[key]} && ${command}`;
       }
-      contents.scripts.postinstall = command;
+      contents.scripts[key] = command;
     }
     fs.writeFileSync(file, jsonFormat(contents, config));
     return true;

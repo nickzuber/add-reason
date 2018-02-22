@@ -46,7 +46,7 @@ external camelCase : string => string = "lodash.camelcase";
 
 /** Internal patches */
 [@bs.val] [@bs.module "../patches"]
-external appendToPackageScripts : (string, string) => bool = "editPackageScripts";
+external appendToPackageScripts : (string, string, string) => bool = "editPackageScripts";
 
 [@bs.val] [@bs.module "../patches"]
 external generateConfigContents : (string, string) => string = "";
