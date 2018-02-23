@@ -4,15 +4,16 @@
   "description": "",
   "main": "index.js",
   "directories": {
-    
+
   },
   "dependencies": {
-    
+
   },
   "devDependencies": {
-    
+
   },
   "scripts": {
-    "postinstall": "node foo && make bar"
+    "postinstall": "node foo && make bar",
+    "build-reason": "node foo && make bar"
   }
 }

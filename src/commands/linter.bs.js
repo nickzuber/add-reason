@@ -6,8 +6,8 @@ var Curry                   = require("bs-platform/lib/js/curry.js");
 var Chalk                   = require("chalk");
 var Printf                  = require("bs-platform/lib/js/printf.js");
 var Patches                 = require("../patches");
-var Utils$ReasonTemplate    = require("./utils.js");
-var Bindings$ReasonTemplate = require("./bindings.js");
+var Utils$ReasonTemplate    = require("./utils.bs.js");
+var Bindings$ReasonTemplate = require("./bindings.bs.js");
 
 function createLintingConfig(_, source, root) {
   Bindings$ReasonTemplate.paint(/* None */0, "looking for linting config");
@@ -35,7 +35,7 @@ function createLintingConfig(_, source, root) {
     Bindings$ReasonTemplate.paint(/* None */0, "creating linting config");
     return /* tuple */[
             Utils$ReasonTemplate.Fs[/* safeCreateFile */2](configPath, contents),
-            /* Some */["created " + Chalk.yellow(".merlin")]
+            /* Some */["created " + Utils$ReasonTemplate.highlightColor(".merlin")]
           ];
   }
 }

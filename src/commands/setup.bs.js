@@ -5,11 +5,11 @@ var Block                   = require("bs-platform/lib/js/block.js");
 var Curry                   = require("bs-platform/lib/js/curry.js");
 var Chalk                   = require("chalk");
 var Printf                  = require("bs-platform/lib/js/printf.js");
-var Link$ReasonTemplate     = require("./link.js");
-var Utils$ReasonTemplate    = require("./utils.js");
-var Config$ReasonTemplate   = require("./config.js");
-var Linter$ReasonTemplate   = require("./linter.js");
-var Bindings$ReasonTemplate = require("./bindings.js");
+var Link$ReasonTemplate     = require("./link.bs.js");
+var Utils$ReasonTemplate    = require("./utils.bs.js");
+var Config$ReasonTemplate   = require("./config.bs.js");
+var Linter$ReasonTemplate   = require("./linter.bs.js");
+var Bindings$ReasonTemplate = require("./bindings.bs.js");
 
 function prepareTargetDirectory(_, source, root) {
   Bindings$ReasonTemplate.paint(/* None */0, "looking for source directory");
@@ -42,7 +42,32 @@ function prepareTargetDirectory(_, source, root) {
   } else {
     return /* tuple */[
             /* false */0,
-            /* Some */["couldn't find " + (Chalk.bold(source) + ", do you have a typo?")]
+            /* Some */["couldn't find " + (Utils$ReasonTemplate.highlightColor(source) + ", do you have a typo?")]
+          ];
+  }
+}
+
+function checkForBucklescript(_, _$1, root) {
+  Bindings$ReasonTemplate.paint(/* None */0, "checking bs-platform has been linked or installed");
+  var bsPlatformPath = Utils$ReasonTemplate.Path[/* combinePaths */1](/* None */0, /* :: */[
+        root,
+        /* :: */[
+          "node_modules",
+          /* :: */[
+            "bs-platform",
+            /* [] */0
+          ]
+        ]
+      ]);
+  if (Utils$ReasonTemplate.Fs[/* safeFileExists */0](bsPlatformPath)) {
+    return /* tuple */[
+            /* true */1,
+            /* None */0
+          ];
+  } else {
+    return /* tuple */[
+            /* true */1,
+            /* Some */[Chalk.redBright("WARNING ") + ("couldn't find " + (Chalk.magenta("bs-platform") + (", make sure you it's installed globally & linked with " + Chalk.magenta("npm link bs-platform"))))]
           ];
   }
 }
@@ -70,8 +95,14 @@ function main(name, source, root, version, linking) {
           /* :: */[
             Link$ReasonTemplate.performLinking,
             /* :: */[
-              Link$ReasonTemplate.createPostinstall,
-              /* [] */0
+              Link$ReasonTemplate.createBuildCommand,
+              /* :: */[
+                Link$ReasonTemplate.createPostinstallCommand,
+                /* :: */[
+                  checkForBucklescript,
+                  /* [] */0
+                ]
+              ]
             ]
           ]
         ]
@@ -82,7 +113,13 @@ function main(name, source, root, version, linking) {
         Config$ReasonTemplate.createBuildingConfig,
         /* :: */[
           Linter$ReasonTemplate.createLintingConfig,
-          /* [] */0
+          /* :: */[
+            Link$ReasonTemplate.createBuildCommand,
+            /* :: */[
+              checkForBucklescript,
+              /* [] */0
+            ]
+          ]
         ]
       ]
     ];
@@ -96,5 +133,6 @@ function main(name, source, root, version, linking) {
 }
 
 exports.prepareTargetDirectory = prepareTargetDirectory;
+exports.checkForBucklescript   = checkForBucklescript;
 exports.main                   = main;
 /* chalk Not a pure module */

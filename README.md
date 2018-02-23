@@ -53,7 +53,15 @@ or, since `setup` is the default command, you can even write
 $ add-reason ./reasonCode
 ```
 
-and that's it! Now you can import your compiled ReasonML code with
+and that's it! Now you can compile you ReasonML code with
+
+```
+$ npm run build-reason
+# or
+$ bsb -make-world
+```
+
+and then import your compiled ReasonML code with
 
 ```js
 const reasonCode = require('reasonCode');
@@ -100,7 +108,9 @@ There are a few steps that happen when you call `setup`:
  2. Make sure we have a config file
  3. Make sure we have a linting file
  4. Create symlink
- 5. Create postinstall
+ 5. Create build command
+ 6. Create postinstall
+ 7. Check for `bs-platform`
 
 Preparing the target directory just makes sure that the path `./lib/js/[your ReasonML directory name]` exists. This is where BuckleScript will put your compiled ReasonML/OCaml code, so this is the spot where we want to create a symlink later to down the line.
 
@@ -108,9 +118,18 @@ Next we just want to make sure you're all set up with at least the most basic of
 
 Then we just create that symlink  that hooks in your compiled ReasonML code to your `node_modules/` for easy access. We also create a postinstall script that will add this symlink every time someone installs your project, given that the link doesn't already exist. You always have the option to skip this symlinking step with the `--no-linking` flag too if you want.
 
+We also add a script to your `package.json` called `build-reason` that simply uses Bucklescript to compile your code. So you can then call `npm run build-reason` after calling `setup` to have your ReasonML code compiled and ready to use!
+
+The last thing that we do is check to make sure that you have [`bs-platform`](https://bucklescript.github.io/) integrated into your project. If you don't have it globally installed and linked to your current project, you're prompted to install and link it with
+
+```
+$ npm install -g bs-platform
+$ npm link bs-platform
+```
+
 ## FAQ
 
-> #### I ran `setup` and everything worked fine, but when I try to import my code I get `Error: Cannot find module`
+> I ran `setup` and everything worked fine, but when I try to import my code I get `Error: Cannot find module`
 
 This is almost always because your ReasonML directory doesn't have an `index.re` file. Normally, this isn't a necessary thing, but if you want to be able to write
 
@@ -126,9 +145,15 @@ const reasonCode = require('reasonCode/file1.js');
 // ...
 ```
 
-> #### I ran `setup` but my code isn't compiled!
+> I ran `setup` but my code isn't compiled!
 
-`add-reason` doesn't actually compile your code or deal with that bit. You still need to make sure you're compiling your code yourself with BuckleScript something like
+Don't forget to compile your code using `bs-platform`! You can use the `build-reason` command that should have been added to your `package.json` after using the setup command.
+
+```
+$ npm run build-reason
+```
+
+Remember that `add-reason` doesn't actually compile your code or deal with that bit. Alternatively, you can compile your code yourself manually with BuckleScript something like
 
 ```
 $ bsb -make-world
