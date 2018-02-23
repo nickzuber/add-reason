@@ -1,6 +1,6 @@
 {
   "name": "add-reason",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "Simple tool for seamlessly integrating ReasonML into your existing JavaScript projects.",
   "main": "index.js",
   "bin": {
