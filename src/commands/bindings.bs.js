@@ -51,7 +51,7 @@ function success() {
 
 function failure() {
   Patches.flush();
-  process.stdout.write(NodeEmoji.get("no_entry_sign") + "  " + Chalk.red("failure"));
+  process.stdout.write(NodeEmoji.get("zap") + "  " + Chalk.red("failure"));
   return /* () */0;
 }
 

@@ -13,7 +13,6 @@
     
   },
   "scripts": {
-    "build-reason": "bsb -make-world",
-    "postinstall": "node -e \"var s='../lib/js/./src/myCode',d='./node_modules/myCode',fs=require('fs');if(fs.existsSync(d)===false){fs.symlinkSync(s,d,'dir')};\""
+    
   }
 }

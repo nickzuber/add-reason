@@ -101,7 +101,7 @@ let success = () => {
 
 let failure = () => {
   flush();
-  stdout(emoji("no_entry_sign") ++ red("failure"));
+  stdout(emoji("zap") ++ red("failure"));
 };
 
 /** Path and Fs */ [@bs.val] [@bs.module "fs"]

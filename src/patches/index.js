@@ -12,7 +12,7 @@ const jsonFormat = require('json-format');
  */
 const OutputPatcher = (commander) => {
   const originalHelpOutput = commander.helpInformation();
-  const newNativeHelpMethod = function() {
+  const newNativeHelpMethod = function () {
     let newOutput = originalHelpOutput.replace(/\n  Commands/gmi, '  Commands');
     return newOutput;
   }
@@ -23,6 +23,7 @@ const OutputPatcher = (commander) => {
  * Takes a path to a `package.json` file and adds the given command to its `scripts` key.
  * Note that everything needs to be sync because of the ordering of the output.
  * @param {string} file The absolute path to the `package.json` file.
+ * @param {string} key The name of the package attribute to change.
  * @param {string} command The command to add to the `scripts` key.
  * @return {void} The success of the operations.
  */

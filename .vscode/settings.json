@@ -1,3 +1,5 @@
 {
-  "editor.formatOnSave": true
+  "[reason]": {
+    "editor.formatOnSave": true
+  },
 }
