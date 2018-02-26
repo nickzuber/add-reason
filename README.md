@@ -14,7 +14,7 @@ $ npm install -g add-reason
 ```
 or
 ```
-$ yarn add global add-reason
+$ yarn global add add-reason
 ```
 
 ## Usage
