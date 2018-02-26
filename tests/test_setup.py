@@ -9,7 +9,8 @@ class TestInit(BaseCommandTestCase):
 
   # This is a portion of the postinstall script we generate that should always be there only once, since
   # our script should never write itself more than once.
-  should_exist_once = "fs=require('fs');if(fs.existsSync(d)===false){fs.symlinkSync(s,d,'dir')}"
+  should_exist_once_in_postinstall = "fs=require('fs');if(fs.existsSync(d)===false){fs.symlinkSync(s,d,'dir')}"
+  should_exist_once_in_build = "bsb -make-world"
   name = "reason-package"
   directory = "src/myCode"
 
@@ -35,6 +36,7 @@ class TestInit(BaseCommandTestCase):
       exists = os.path.isfile('.merlin')
       self.assertTrue(exists, '.merlin was never created')
 
+  ### postinstall testing
   def test_postinstall_was_correctly_added_to_package_file_with_no_scripts(self):
     with cd('./tests/root_for_testing'):
       self.call("cp", "package.no_scripts.json", "package.json")
@@ -43,7 +45,7 @@ class TestInit(BaseCommandTestCase):
       self.assertIn('scripts', contents, 'Could not find scripts key in the package.json file')
       self.assertIn('postinstall', contents['scripts'], 'Could not find postinstall key in the package.json scripts key')
       postinstall_script = contents['scripts']['postinstall']
-      self.assertEqual(postinstall_script.count(self.should_exist_once), 1, 'Found more than one instance of our postinstall script')
+      self.assertEqual(postinstall_script.count(self.should_exist_once_in_postinstall), 1, 'Found more than one instance of our postinstall script')
 
   def test_postinstall_was_correctly_added_to_package_file_with_empty_scripts(self):
     with cd('./tests/root_for_testing'):
@@ -53,7 +55,7 @@ class TestInit(BaseCommandTestCase):
       self.assertIn('scripts', contents, 'Could not find scripts key in the package.json file')
       self.assertIn('postinstall', contents['scripts'], 'Could not find postinstall key in the package.json scripts key')
       postinstall_script = contents['scripts']['postinstall']
-      self.assertEqual(postinstall_script.count(self.should_exist_once), 1, 'Found more than one instance of our postinstall script')
+      self.assertEqual(postinstall_script.count(self.should_exist_once_in_postinstall), 1, 'Found more than one instance of our postinstall script')
 
   def test_postinstall_was_correctly_added_to_package_file_with_other_script(self):
     with cd('./tests/root_for_testing'):
@@ -63,7 +65,7 @@ class TestInit(BaseCommandTestCase):
       self.assertIn('scripts', contents, 'Could not find scripts key in the package.json file')
       self.assertIn('postinstall', contents['scripts'], 'Could not find postinstall key in the package.json scripts key')
       postinstall_script = contents['scripts']['postinstall']
-      self.assertEqual(postinstall_script.count(self.should_exist_once), 1, 'Found more than one instance of our postinstall script')
+      self.assertEqual(postinstall_script.count(self.should_exist_once_in_postinstall), 1, 'Found more than one instance of our postinstall script')
 
   def test_postinstall_was_correctly_added_to_package_file_with_other_postinstall(self):
     with cd('./tests/root_for_testing'):
@@ -74,7 +76,7 @@ class TestInit(BaseCommandTestCase):
       self.assertIn('postinstall', contents['scripts'], 'Could not find postinstall key in the package.json scripts key')
       postinstall_script = contents['scripts']['postinstall']
       self.assertIn(' && ', postinstall_script, 'Our postinstall script was probably not integrated correctly with an existing postinstall')
-      self.assertEqual(postinstall_script.count(self.should_exist_once), 1, 'Found more than one instance of our postinstall script')
+      self.assertEqual(postinstall_script.count(self.should_exist_once_in_postinstall), 1, 'Found more than one instance of our postinstall script')
 
   def test_postinstall_was_correctly_added_to_package_file_with_no_scripts_called_twice(self):
     with cd('./tests/root_for_testing'):
@@ -84,8 +86,61 @@ class TestInit(BaseCommandTestCase):
       self.assertIn('scripts', contents, 'Could not find scripts key in the package.json file')
       self.assertIn('postinstall', contents['scripts'], 'Could not find postinstall key in the package.json scripts key')
       postinstall_script = contents['scripts']['postinstall']
-      self.assertEqual(postinstall_script.count(self.should_exist_once), 1, 'Found more than one instance of our postinstall script')
+      self.assertEqual(postinstall_script.count(self.should_exist_once_in_postinstall), 1, 'Found more than one instance of our postinstall script')
 
+  ### build command testing
+  def test_build_command_was_correctly_added_to_package_file_with_no_scripts(self):
+    with cd('./tests/root_for_testing'):
+      self.call("cp", "package.no_scripts.json", "package.json")
+      self.call("node", "../../index.js", "setup", self.directory, self.name)
+      contents = self.read_json('package.json')
+      self.assertIn('scripts', contents, 'Could not find scripts key in the package.json file')
+      self.assertIn('build-reason', contents['scripts'], 'Could not find build-reason key in the package.json scripts key')
+      build_command = contents['scripts']['build-reason']
+      self.assertEqual(build_command.count(self.should_exist_once_in_build), 1, 'Found more than one instance of our build script')
+
+    def test_build_command_was_correctly_added_to_package_file_with_empty_scripts(self):
+      with cd('./tests/root_for_testing'):
+        self.call("cp", "package.empty_scripts.json", "package.json")
+        self.call("node", "../../index.js", "setup", self.directory, self.name)
+        contents = self.read_json('package.json')
+        self.assertIn('scripts', contents, 'Could not find scripts key in the package.json file')
+        self.assertIn('build-reason', contents['scripts'], 'Could not find build-reason key in the package.json scripts key')
+        build_command = contents['scripts']['build-reason']
+        self.assertEqual(build_command.count(self.should_exist_once_in_build), 1, 'Found more than one instance of our postinstall script')
+
+  def test_build_command_was_correctly_added_to_package_file_with_other_script(self):
+    with cd('./tests/root_for_testing'):
+      self.call("cp", "package.other_script.json", "package.json")
+      self.call("node", "../../index.js", "setup", self.directory, self.name)
+      contents = self.read_json('package.json')
+      self.assertIn('scripts', contents, 'Could not find scripts key in the package.json file')
+      self.assertIn('build-reason', contents['scripts'], 'Could not find build-reason key in the package.json scripts key')
+      build_command = contents['scripts']['build-reason']
+      self.assertEqual(build_command.count(self.should_exist_once_in_build), 1, 'Found more than one instance of our postinstall script')
+
+  def test_build_command_was_correctly_added_to_package_file_with_other_build_command(self):
+    with cd('./tests/root_for_testing'):
+      self.call("cp", "package.other_postinstall.json", "package.json")
+      self.call("node", "../../index.js", "setup", self.directory, self.name)
+      contents = self.read_json('package.json')
+      self.assertIn('scripts', contents, 'Could not find scripts key in the package.json file')
+      self.assertIn('build-reason', contents['scripts'], 'Could not find build-reason key in the package.json scripts key')
+      build_command = contents['scripts']['build-reason']
+      self.assertIn(' && ', build_command, 'Our postinstall script was probably not integrated correctly with an existing postinstall')
+      self.assertEqual(build_command.count(self.should_exist_once_in_build), 1, 'Found more than one instance of our postinstall script')
+
+  def test_build_command_was_correctly_added_to_package_file_with_no_scripts_called_twice(self):
+    with cd('./tests/root_for_testing'):
+      self.call("node", "../../index.js", "setup", self.directory, self.name)
+      self.call("node", "../../index.js", "setup", self.directory, self.name)
+      contents = self.read_json('package.json')
+      self.assertIn('scripts', contents, 'Could not find scripts key in the package.json file')
+      self.assertIn('build-reason', contents['scripts'], 'Could not find build-reason key in the package.json scripts key')
+      build_command = contents['scripts']['build-reason']
+      self.assertEqual(build_command.count(self.should_exist_once_in_build), 1, 'Found more than one instance of our postinstall script')
+
+  ### no linking testing
   def test_postinstall_was_not_added_to_package_file_with_no_linking_flag(self):
     with cd('./tests/root_for_testing'):
       # This uses our default package.json copy which has a scripts key and no postinstall key

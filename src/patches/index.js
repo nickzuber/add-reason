@@ -12,7 +12,7 @@ const jsonFormat = require('json-format');
  */
 const OutputPatcher = (commander) => {
   const originalHelpOutput = commander.helpInformation();
-  const newNativeHelpMethod = function() {
+  const newNativeHelpMethod = function () {
     let newOutput = originalHelpOutput.replace(/\n  Commands/gmi, '  Commands');
     return newOutput;
   }
@@ -23,10 +23,11 @@ const OutputPatcher = (commander) => {
  * Takes a path to a `package.json` file and adds the given command to its `scripts` key.
  * Note that everything needs to be sync because of the ordering of the output.
  * @param {string} file The absolute path to the `package.json` file.
+ * @param {string} key The name of the package attribute to change.
  * @param {string} command The command to add to the `scripts` key.
  * @return {void} The success of the operations.
  */
-const editPackageScripts = (file, command) => {
+const editPackageScripts = (key, file, command) => {
   const config = {
     type: 'space',
     size: 2
@@ -36,18 +37,18 @@ const editPackageScripts = (file, command) => {
     // No existing scripts
     if (!contents.scripts) {
       contents.scripts = {
-        postinstall: command
+        [key]: command
       };
     }
     // Already are some scripts
     else {
-      // Already is a postinstall script
-      if (contents.scripts.postinstall) {
+      // Already is a script defined with `key`
+      if (contents.scripts[key]) {
         // Make sure we don't add this command more than once if it already exists
-        if (contents.scripts.postinstall.indexOf(command) > -1) return true;
-        command = `${contents.scripts.postinstall} && ${command}`;
+        if (contents.scripts[key].indexOf(command) > -1) return true;
+        command = `${contents.scripts[key]} && ${command}`;
       }
-      contents.scripts.postinstall = command;
+      contents.scripts[key] = command;
     }
     fs.writeFileSync(file, jsonFormat(contents, config));
     return true;

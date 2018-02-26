@@ -6,8 +6,8 @@ var Curry                   = require("bs-platform/lib/js/curry.js");
 var Chalk                   = require("chalk");
 var Printf                  = require("bs-platform/lib/js/printf.js");
 var Patches                 = require("../patches");
-var Utils$ReasonTemplate    = require("./utils.js");
-var Bindings$ReasonTemplate = require("./bindings.js");
+var Utils$ReasonTemplate    = require("./utils.bs.js");
+var Bindings$ReasonTemplate = require("./bindings.bs.js");
 
 function performLinking(name, source, root) {
   Bindings$ReasonTemplate.paint(/* None */0, "seeing if we can make a symlink");
@@ -62,7 +62,7 @@ function performLinking(name, source, root) {
                               ])
                           ]),
                         "%s already exists in your %s, so we can't create a symlink"
-                      ]), Chalk.bold(name), Chalk.bold("node_modules"))]
+                      ]), Utils$ReasonTemplate.highlightColor(name), Utils$ReasonTemplate.highlightColor("node_modules"))]
           ];
   } else {
     Bindings$ReasonTemplate.paint(/* None */0, "making symlink to output directory");
@@ -70,7 +70,7 @@ function performLinking(name, source, root) {
     if (match !== 0) {
       return /* tuple */[
               /* true */1,
-              /* Some */["import your reason code with " + Chalk.yellow("require('" + (name + "');"))]
+              /* Some */["import your reason code with " + Utils$ReasonTemplate.highlightColor("require('" + (name + "');"))]
             ];
     } else {
       return /* tuple */[
@@ -81,7 +81,45 @@ function performLinking(name, source, root) {
   }
 }
 
-function createPostinstall(name, source, root) {
+function createBuildCommand(name, source, root) {
+  Bindings$ReasonTemplate.paint(/* None */0, "preparing to add a build command");
+  var packagePath = Utils$ReasonTemplate.Path[/* combinePaths */1](/* None */0, /* :: */[
+        root,
+        /* :: */[
+          "package.json",
+          /* [] */0
+        ]
+      ]);
+  Utils$ReasonTemplate.Path[/* combinePaths */1](/* Some */[/* false */0], /* :: */[
+        "..",
+        /* :: */[
+          "lib",
+          /* :: */[
+            "js",
+            /* :: */[
+              source,
+              /* [] */0
+            ]
+          ]
+        ]
+      ]);
+  Utils$ReasonTemplate.Path[/* combinePaths */1](/* Some */[/* false */0], /* :: */[
+        ".",
+        /* :: */[
+          "node_modules",
+          /* :: */[
+            name,
+            /* [] */0
+          ]
+        ]
+      ]);
+  return /* tuple */[
+          +Patches.editPackageScripts("build-reason", packagePath, "bsb -make-world"),
+          /* Some */["Added a " + (Utils$ReasonTemplate.highlightColor("build-reason") + " command")]
+        ];
+}
+
+function createPostinstallCommand(name, source, root) {
   Bindings$ReasonTemplate.paint(/* None */0, "preparing to add a postinstall script");
   var packagePath = Utils$ReasonTemplate.Path[/* combinePaths */1](/* None */0, /* :: */[
         root,
@@ -134,8 +172,8 @@ function createPostinstall(name, source, root) {
           ]), source$1, dest);
   Bindings$ReasonTemplate.paint(/* None */0, "adding the postinstall script to your package file");
   return /* tuple */[
-          +Patches.editPackageScripts(packagePath, command),
-          /* None */0
+          +Patches.editPackageScripts("postinstall", packagePath, command),
+          /* Some */["Added a " + (Utils$ReasonTemplate.highlightColor("postinstall") + " command")]
         ];
 }
 
@@ -154,8 +192,11 @@ function main(name, source, root, version) {
                         "add-reason link v%s\n"
                       ]), version))));
   var stepsAsFunctions_001 = /* :: */[
-    createPostinstall,
-    /* [] */0
+    createBuildCommand,
+    /* :: */[
+      createPostinstallCommand,
+      /* [] */0
+    ]
   ];
   var stepsAsFunctions = /* :: */[
     performLinking,
@@ -170,7 +211,8 @@ function main(name, source, root, version) {
   return Utils$ReasonTemplate.printList(match[1]);
 }
 
-exports.performLinking    = performLinking;
-exports.createPostinstall = createPostinstall;
-exports.main              = main;
+exports.performLinking           = performLinking;
+exports.createBuildCommand       = createBuildCommand;
+exports.createPostinstallCommand = createPostinstallCommand;
+exports.main                     = main;
 /* chalk Not a pure module */

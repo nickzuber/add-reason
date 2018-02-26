@@ -1,4 +1,5 @@
 open Utils;
+
 open Bindings;
 
 /**
@@ -9,23 +10,22 @@ let createLintingConfig = (_name, source, root) : (bool, option(string)) => {
   let configPath = Path.combinePaths([root, ".merlin"]);
   let nodeModulesPath = Path.combinePaths([root, "node_modules"]);
   let contents = generateMerlinContents(source, nodeModulesPath);
-  if (!Fs.safeFileExists(configPath)) {
+  if (! Fs.safeFileExists(configPath)) {
     paint("creating linting config");
-    (Fs.safeCreateFile(configPath, contents), Some("created " ++ yellow(".merlin")));
+    (
+      Fs.safeCreateFile(configPath, contents),
+      Some("created " ++ highlightColor(".merlin"))
+    );
   } else {
     (true, None);
-  }
+  };
 };
 
 let main = (source, root, version) : unit => {
-  Printf.sprintf("add-reason linter v%s\n", version)
-    |> white
-    |> bold
-    |> stdout;
-  let stepsAsFunctions = [
-    createLintingConfig
-  ];
-  let (finishWithFailure, comments) = Utils.execute(stepsAsFunctions, (), source, root);
+  Printf.sprintf("add-reason linter v%s\n", version) |> white |> bold |> stdout;
+  let stepsAsFunctions = [createLintingConfig];
+  let (finishWithFailure, comments) =
+    Utils.execute(stepsAsFunctions, (), source, root);
   finishWithFailure ? success() : failure();
-  Utils.printList(comments)
-}
+  Utils.printList(comments);
+};

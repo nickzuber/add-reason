@@ -1,4 +1,5 @@
 open Utils;
+
 open Bindings;
 
 /**
@@ -10,23 +11,22 @@ let createBuildingConfig = (_name, source, root) : (bool, option(string)) => {
   let configPath = Path.combinePaths([root, "bsconfig.json"]);
   let packagePath = Path.combinePaths([root, "package.json"]);
   let contents = generateConfigContents(source, packagePath);
-  if (!Fs.safeFileExists(configPath)) {
+  if (! Fs.safeFileExists(configPath)) {
     paint("creating building config");
-    (Fs.safeCreateFile(configPath, contents), Some("created " ++ yellow("bsconfig.json")));
+    (
+      Fs.safeCreateFile(configPath, contents),
+      Some("created " ++ highlightColor("bsconfig.json"))
+    );
   } else {
     (true, None);
-  }
+  };
 };
 
 let main = (source, root, version) : unit => {
-  Printf.sprintf("add-reason config v%s\n", version)
-    |> white
-    |> bold
-    |> stdout;
-  let stepsAsFunctions = [
-    createBuildingConfig
-  ];
-  let (finishWithFailure, comments) = Utils.execute(stepsAsFunctions, (), source, root);
+  Printf.sprintf("add-reason config v%s\n", version) |> white |> bold |> stdout;
+  let stepsAsFunctions = [createBuildingConfig];
+  let (finishWithFailure, comments) =
+    Utils.execute(stepsAsFunctions, (), source, root);
   finishWithFailure ? success() : failure();
-  Utils.printList(comments)
-}
+  Utils.printList(comments);
+};

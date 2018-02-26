@@ -6,7 +6,7 @@ const path = require('path');
 const program = require('commander');
 const chalk = require('chalk');
 const getDistance = require('levenshtein-lite');
-const commands = require('./src/commands');
+const commands = require('./src/commands/index.bs');
 const OutputPatcher = require('./src/patches').OutputPatcher;
 const rootDirectory = process.cwd();
 

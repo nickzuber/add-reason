@@ -6,8 +6,8 @@ var Curry                   = require("bs-platform/lib/js/curry.js");
 var Chalk                   = require("chalk");
 var Printf                  = require("bs-platform/lib/js/printf.js");
 var Patches                 = require("../patches");
-var Utils$ReasonTemplate    = require("./utils.js");
-var Bindings$ReasonTemplate = require("./bindings.js");
+var Utils$ReasonTemplate    = require("./utils.bs.js");
+var Bindings$ReasonTemplate = require("./bindings.bs.js");
 
 function createBuildingConfig(_, source, root) {
   Bindings$ReasonTemplate.paint(/* None */0, "looking for building config");
@@ -35,7 +35,7 @@ function createBuildingConfig(_, source, root) {
     Bindings$ReasonTemplate.paint(/* None */0, "creating building config");
     return /* tuple */[
             Utils$ReasonTemplate.Fs[/* safeCreateFile */2](configPath, contents),
-            /* Some */["created " + Chalk.yellow("bsconfig.json")]
+            /* Some */["created " + Utils$ReasonTemplate.highlightColor("bsconfig.json")]
           ];
   }
 }
