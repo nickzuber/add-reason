@@ -24,6 +24,11 @@ class TestInit(BaseCommandTestCase):
       result = self.call("node", "../../index.js", "setup", self.directory, self.name, "--no-linking")
       self.assertTrue(result, 'Standard --no-linking setup call did not pass successfully.')
 
+  def test_steps_pass_in_source_flag(self):
+    with cd('./tests/root_for_testing'):
+      result = self.call("node", "../../index.js", "setup", self.directory, self.name, "--in-source")
+      self.assertTrue(result, 'Standard --in-source setup call did not pass successfully.')
+
   def test_bsconfig_was_created(self):
     with cd('./tests/root_for_testing'):
       self.call("node", "../../index.js", "setup", self.directory, self.name)
@@ -140,7 +145,27 @@ class TestInit(BaseCommandTestCase):
       build_command = contents['scripts']['build-reason']
       self.assertEqual(build_command.count(self.should_exist_once_in_build), 1, 'Found more than one instance of our postinstall script')
 
-  ### no linking testing
+  def test_postinstall_was_not_added_to_package_file_with_in_source_flag(self):
+    with cd('./tests/root_for_testing'):
+      # This uses our default package.json copy which has a scripts key and no postinstall key
+      self.call("node", "../../index.js", "setup", self.directory, self.name, "--in-source")
+      contents = self.read_json('package.json')
+      self.assertNotIn('postinstall', contents['scripts'], 'Postinstall was created when it should not have been')
+
+  def test_proper_bsconfig_file_generated_with_in_source_flag(self):
+    with cd('./tests/root_for_testing'):
+      # This uses our default package.json copy which has a scripts key and no postinstall key
+      self.call("node", "../../index.js", "setup", self.directory, self.name, "--in-source")
+      contents = self.read_file('bsconfig.json')
+      self.assertIn('in-source', contents, 'Config file doesn\'t have `in-source` set to true')
+
+  def test_proper_bsconfig_file_generated_with(self):
+    with cd('./tests/root_for_testing'):
+      # This uses our default package.json copy which has a scripts key and no postinstall key
+      self.call("node", "../../index.js", "setup", self.directory, self.name)
+      contents = self.read_file('bsconfig.json')
+      self.assertNotIn('in-source', contents, 'Config file wrongly has `in-source` set to true')
+
   def test_postinstall_was_not_added_to_package_file_with_no_linking_flag(self):
     with cd('./tests/root_for_testing'):
       # This uses our default package.json copy which has a scripts key and no postinstall key

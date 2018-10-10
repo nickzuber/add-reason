@@ -45,7 +45,7 @@ external appendToPackageScripts : (string, string, string) => bool =
   "editPackageScripts";
 
 [@bs.val] [@bs.module "../patches"]
-external generateConfigContents : (string, string) => string = "";
+external generateConfigContents : (string, bool, string) => string = "";
 
 [@bs.val] [@bs.module "../patches"]
 external generateMerlinContents : (string, string) => string = "";

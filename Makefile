@@ -31,6 +31,7 @@ reset-mock:
 	rm -f ./tests/root_for_testing/bsconfig.json
 	rm -f ./tests/root_for_testing/.merlin
 	rm -rf ./tests/root_for_testing/lib
+	rm -rf ./tests/root_for_testing/src/**/*.bs.js
 	rm -f ./tests/root_for_testing/node_modules/*
 	touch ./tests/root_for_testing/node_modules/persist.lock
 	cp ./tests/root_for_testing/package.empty_scripts.json ./tests/root_for_testing/package.json
