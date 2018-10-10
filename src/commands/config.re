@@ -24,10 +24,10 @@ let createBuildingConfig =
   };
 };
 
-let main = (source, root, version) : unit => {
+let main = (source, root, inSource, version) : unit => {
   Printf.sprintf("add-reason config v%s\n", version) |> white |> bold |> stdout;
   /* `inSource` will always be false here. */
-  let stepsAsFunctions = [createBuildingConfig(false)];
+  let stepsAsFunctions = [createBuildingConfig(inSource)];
   let (finishWithFailure, comments) =
     Utils.execute(stepsAsFunctions, (), source, root);
   finishWithFailure ? success() : failure();

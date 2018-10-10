@@ -49,7 +49,7 @@ program.command('setup <directory> [package-name]')
  program.command('config <directory>')
   .description('create a bsconfig file for building your ReasonML code')
   .action(directory => {
-    handleConfig(directory, rootDirectory, VERSION);
+    handleConfig(directory, rootDirectory, !!program.inSource, VERSION);
   });
 
 OutputPatcher(program);
