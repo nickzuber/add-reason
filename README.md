@@ -96,7 +96,7 @@ Usage: add-reason [command] [options]
     -h, --help     output usage information
     -V, --version  output the version number
     --no-linking   don't create the symlink to your compiled ReasonML code
-    --in-source    change target to in-source rather than a compiled directory, assumes `.bs.js` suffix
+    --in-source    change target to in-source rather than a compiled directory
 ```
 
 ## How It Works

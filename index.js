@@ -20,7 +20,7 @@ const unknownCommand = program => !program.args.map(arg => typeof arg).includes(
 program.version(VERSION)
   .usage('add-reason [command] [options]')
   .option('--no-linking', 'don\'t create the symlink to your compiled ReasonML code')
-  .option('--in-source', 'change target to in-source rather than a compiled directory, assumes `.bs.js` suffix');
+  .option('--in-source', 'change target to in-source rather than a compiled directory');
 
 program.command('setup <directory> [package-name]')
   .description('set up Reason directory, config files, and symlink')
