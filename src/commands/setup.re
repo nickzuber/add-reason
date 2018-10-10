@@ -49,13 +49,13 @@ let checkForBucklescript = (name, source, root) : (bool, option(string)) => {
   };
 };
 
-let main = (name, source, root, version, linking) : unit => {
+let main = (name, source, root, version, inSource, linking) : unit => {
   Printf.sprintf("add-reason setup v%s\n", version) |> white |> bold |> stdout;
   let stepsAsFunctions =
     if (linking) {
       [
         prepareTargetDirectory,
-        Config.createBuildingConfig,
+        Config.createBuildingConfig(inSource),
         Linter.createLintingConfig,
         Link.performLinking,
         Link.createBuildCommand,
@@ -65,7 +65,7 @@ let main = (name, source, root, version, linking) : unit => {
     } else {
       [
         prepareTargetDirectory,
-        Config.createBuildingConfig,
+        Config.createBuildingConfig(inSource),
         Linter.createLintingConfig,
         Link.createBuildCommand,
         checkForBucklescript

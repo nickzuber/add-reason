@@ -29,6 +29,9 @@ class BaseCommandTestCase(TestCase):
   def read_json(self, fname):
     return json.load(open(fname))
 
+  def read_file(self, fname):
+    return open(fname).read()
+
   def exists(self, fname):
     return os.path.isfile(fname)
 

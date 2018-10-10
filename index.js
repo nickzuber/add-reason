@@ -2,7 +2,6 @@
 
 'use strict';
 
-const path = require('path');
 const program = require('commander');
 const chalk = require('chalk');
 const getDistance = require('levenshtein-lite');
@@ -20,14 +19,17 @@ const unknownCommand = program => !program.args.map(arg => typeof arg).includes(
 
 program.version(VERSION)
   .usage('add-reason [command] [options]')
-  .option('--no-linking', 'don\'t create the symlink to your compiled ReasonML code');
+  .option('--no-linking', 'don\'t create the symlink to your compiled ReasonML code')
+  .option('--in-source', 'change target to in-source rather than a compiled directory, assumes `.bs.js` suffix');
 
 program.command('setup <directory> [package-name]')
   .description('set up Reason directory, config files, and symlink')
   .action((directory, name) => {
     // given name or last source directory path name or simply `pkg`
     name = name || directory.replace(/\/+$/, '').split('/').pop() || 'pkg';
-    handleSetup(name, directory, rootDirectory, VERSION, program.linking);
+    let inSource = program.inSource;
+    let linking = inSource ? false : program.linking;
+    handleSetup(name, directory, rootDirectory, VERSION, inSource, linking);
   });
 
  program.command('link <directory> [package-name]')
@@ -75,7 +77,9 @@ if (unknownCommand(program)) {
   } else {
     const directory = program.args[0];
     const name = program.args[1] || directory.replace(/\/+$/, '').split('/').pop() || 'pkg';
-    handleSetup(name, directory, rootDirectory, VERSION, program.linking);
+    let inSource = program.inSource;
+    let linking = inSource ? false : program.linking;
+    handleSetup(name, directory, rootDirectory, VERSION, inSource, linking);
   }
   process.exit(0);
 }
